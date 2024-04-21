@@ -13,3 +13,8 @@ export interface Application {
     city: string;
   };
 }
+
+export interface PageProps {
+  params: Record<string, unknown>;
+  searchParams: Record<string, unknown>;
+}

@@ -50,6 +50,7 @@ import {
 import Link from "next/link";
 import { Link2 } from "lucide-react";
 import { Application } from "@/utils/types";
+import { Progress } from "@/components/ui/progress";
 
 export const columns: ColumnDef<Application>[] = [
   {
@@ -138,16 +139,19 @@ export const columns: ColumnDef<Application>[] = [
     cell: () => {
       const value = Number((Math.random() * 100).toFixed(0));
       return (
-        <p
-          className={`
-        ${value <= 30 && "text-red-500"}
-        ${value >= 30 && value <= 50 && "text-yellow-500"}
-        ${value >= 50 && value <= 70 && "text-range-500"}
-        ${value >= 70 && "text-green-500"}
-        `}
-        >
-          {value}%
-        </p>
+        <>
+          <p
+            className={`
+              font-semibold
+      ${value <= 30 && "text-red-500"}
+      ${value >= 30 && value <= 50 && "text-yellow-500"}
+      ${value >= 50 && value <= 70 && "text-range-500"}
+      ${value >= 70 && "text-green-500"}
+      `}
+          >
+            {value}%
+          </p>
+        </>
       );
     },
   },
@@ -170,11 +174,11 @@ export const columns: ColumnDef<Application>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
+              Copy application ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View full application</DropdownMenuItem>
+            <DropdownMenuItem>Export</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -236,6 +240,7 @@ export function ApplicantsTable(props: { data: Application[] }) {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+        <Button variant="outline">Export selected</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
