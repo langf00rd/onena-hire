@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import Support from "./support";
 
 export default function Aside() {
   return (
@@ -69,53 +70,10 @@ export default function Aside() {
           </div>
         </div>
       </div>
-      <Card className="p-5 space-y-5 shadow-md">
-        <p>Got feedback or need support?</p>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="w-full">Send us a message</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogTitle>Talk to us</DialogTitle>
-            <DialogDescription>
-              Someone from our team will contact you via your email
-            </DialogDescription>
-            <form>
-              <fieldset>
-                <Label>Choose category</Label>
-                <Select required>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={SUPPORT_CATEGORIES[0]} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUPPORT_CATEGORIES.map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </fieldset>
-              <fieldset>
-                <Label>Your email</Label>
-                <Input required type="email" placeholder="john@acme.co" />
-              </fieldset>
-              <fieldset>
-                <Label>Message</Label>
-                <Textarea required placeholder="Type your message here..." />
-              </fieldset>
-              <DialogFooter>
-                <Button>Send</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </Card>
+      <Support />
     </aside>
   );
 }
-
-const SUPPORT_CATEGORIES = ["Feedback", "Issue"];
 
 export const ASIDE_ROUTES: {
   label: string;

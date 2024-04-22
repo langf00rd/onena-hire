@@ -7,3 +7,5 @@ export const ROUTES = {
     new: "/app/jobs/new",
   },
 };
+
+export const EMAIL = "stephenokyere621@gmail.com";
