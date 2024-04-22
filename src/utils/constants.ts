@@ -7,3 +7,11 @@ export const ROUTES = {
     new: "/app/jobs/new",
   },
 };
+
+export const JOB_POST_SECTIONS = [
+  "job title",
+  "description",
+  "requirements",
+  "responsibilities",
+  "more",
+];
