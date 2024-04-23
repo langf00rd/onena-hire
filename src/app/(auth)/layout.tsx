@@ -1,11 +1,10 @@
-// import Footer from "@/components/footer";
-// import Header from "@/components/header";
+import Header from "@/app/app/components/header";
 import React, { ReactNode } from "react";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       {children}
       {/* <Footer /> */}
     </>

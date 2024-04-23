@@ -1,5 +1,7 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { EyeOff, Eye, LoaderCircle } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -82,8 +84,8 @@ export default function Signup() {
   return (
     <div className="py-4 space-y-4">
       <form onSubmit={handleSubmit}>
-        <div className="w-full space-y-2">
-          <label htmlFor="firstName">First Name</label>
+        <fieldset className="w-full space-y-2">
+          <Label htmlFor="firstName">First Name</Label>
           <Input
             type="text"
             id="firstName"
@@ -92,9 +94,9 @@ export default function Signup() {
             value={firstName}
             onChange={handleChange}
           />
-        </div>
-        <div className="w-full space-y-2">
-          <label htmlFor="lastName">Last Name</label>
+        </fieldset>
+        <fieldset className="w-full space-y-2">
+          <Label htmlFor="lastName">Last Name</Label>
           <Input
             type="text"
             id="lastName"
@@ -103,9 +105,9 @@ export default function Signup() {
             value={lastName}
             onChange={handleChange}
           />
-        </div>
-        <div className="w-full space-y-2">
-          <label htmlFor="email">Email</label>
+        </fieldset>
+        <fieldset className="w-full space-y-2">
+          <Label htmlFor="email">Email</Label>
           <Input
             type="email"
             id="email"
@@ -114,9 +116,9 @@ export default function Signup() {
             value={email}
             onChange={handleChange}
           />
-        </div>
-        <div className="w-full space-y-2">
-          <label htmlFor="password">Password</label>
+        </fieldset>
+        <fieldset className="w-full space-y-2">
+          <Label htmlFor="password">Password</Label>
           <div className="w-full relative">
             <Input
               type={showPassword ? "text" : "password"}
@@ -143,9 +145,9 @@ export default function Signup() {
           {errors.invalidLength && (
             <small className="text-red-500">{errors.invalidLength}</small>
           )}
-        </div>
-        <div className="w-full space-y-2">
-          <label htmlFor="confirmPassword">Confirm Password</label>
+        </fieldset>
+        <fieldset className="w-full space-y-2">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
           <div className="w-full relative">
             <Input
               type={showPassword ? "text" : "password"}
@@ -170,7 +172,7 @@ export default function Signup() {
           {errors.unmatchedPassword && (
             <small className="text-red-500">{errors.unmatchedPassword}</small>
           )}
-        </div>
+        </fieldset>
         <Button type="submit" className="bg-black w-full text-white">
           {loading ? <LoaderCircle className="animate-spin" /> : "Sign up"}
         </Button>
