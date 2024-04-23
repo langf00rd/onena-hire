@@ -10,25 +10,6 @@ import AsideNavItem from "./aside-nav-item";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 import { ROUTES } from "@/utils/constants";
-import { Card } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import Support from "./support";
 
 export default function Aside() {
