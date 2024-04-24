@@ -1,12 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import PageInfo from "../../components/page-info";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, FileDown, Plus, Stars, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,38 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { JOB_POST_SECTIONS } from "@/utils/constants";
+import { Copy, FileDown, Stars } from "lucide-react";
+import PageInfo from "../../components/page-info";
+import ApplicationForm from "./components/application-form";
+import JobPostForm from "./components/job-post-form";
 
 export default function Page() {
-  const [newRequirement, setNewRequirement] = useState("");
-  const [requirements, setRequirements] = useState<string[]>([]);
-  const [newResponsibility, setNewResponsibility] = useState("");
-  const [responsibilities, setResponsibilities] = useState<string[]>([]);
-
-  function addRequirement() {
-    if (!newRequirement.trim()) return;
-    setRequirements((prev) => [...prev, newRequirement]);
-    setNewRequirement("");
-  }
-
-  function removeRequirement(value: string) {
-    setRequirements(requirements.filter((a) => a !== value));
-  }
-
-  function addResponsibility() {
-    if (!newResponsibility.trim()) return;
-    setResponsibilities((prev) => [...prev, newResponsibility]);
-    setNewResponsibility("");
-  }
-
-  function removeResponsibility(value: string) {
-    setResponsibilities(responsibilities.filter((a) => a !== value));
-  }
-
-  function handleFormSubmission(e: FormEvent) {
-    e.preventDefault();
-  }
-
   return (
     <>
       <PageInfo
@@ -60,96 +32,18 @@ export default function Page() {
         title="Create new job"
         actionButtons={<GenerateWithAIDialog />}
       />
-      <form onSubmit={handleFormSubmission} className="mt-10 max-w-xl">
-        <fieldset>
-          <Label className="text-black">Job title</Label>
-          <Input placeholder="Software Engineer" />
-        </fieldset>
-        <fieldset>
-          <Label className="text-black">Description</Label>
-          <Textarea placeholder="Share some info about your company (eg, values, mission & vision, etc) and info about this role" />
-        </fieldset>
-        <fieldset>
-          <Label className="text-black">Requirements</Label>
-          <ul className="space-y-3">
-            {requirements.map((requirement) => (
-              <li
-                key={requirement}
-                className="flex items-center justify-between"
-              >
-                <div className="flex gap-2 items-center">
-                  <Check size={10} />
-                  <p>{requirement}</p>
-                </div>
-                <Button
-                  onClick={() => removeRequirement(requirement)}
-                  size="icon"
-                  className="hover:text-destructive"
-                  variant="outline"
-                >
-                  <X size={15} />
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <div className="flex gap-3">
-            <Input
-              value={newRequirement}
-              onChange={(e) => setNewRequirement(e.target.value)}
-              placeholder="Degree in Computer Science or a relevant field"
-            />
-            <Button variant="secondary" onClick={addRequirement}>
-              <Plus size={15} />
-              Add
-            </Button>
-          </div>
-        </fieldset>
-        <fieldset>
-          <Label className="text-black">Responsibilities</Label>
-          <ul className="space-y-3">
-            {responsibilities.map((responsibility) => (
-              <li
-                key={responsibility}
-                className="flex items-center justify-between"
-              >
-                <div className="flex gap-2 items-center">
-                  <Check size={10} />
-                  <p>{responsibility}</p>
-                </div>
-                <Button
-                  onClick={() => removeResponsibility(responsibility)}
-                  size="icon"
-                  className="hover:text-destructive"
-                  variant="outline"
-                >
-                  <X size={15} />
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <div className="flex gap-3">
-            <Input
-              value={newResponsibility}
-              onChange={(e) => setNewResponsibility(e.target.value)}
-              placeholder="Write technical documentation"
-            />
-            <Button variant="secondary" onClick={addResponsibility}>
-              <Plus size={15} />
-              Add
-            </Button>
-          </div>
-        </fieldset>
-        <fieldset>
-          <Label className="text-black">
-            Please enter any extra information you want to show on the job post
-          </Label>
-          <Textarea placeholder="Talk about any other thing, eg. salary, interview stages, etc" />
-        </fieldset>
-        <div className="space-x-3">
-          <Button>Create</Button>
-          <Button variant="secondary">Save as draft</Button>
-        </div>
-      </form>
+      <Tabs defaultValue="job-post-form" className="max-w-2xl mt-5">
+        <TabsList className="mb-5">
+          <TabsTrigger value="job-post-form">Job post</TabsTrigger>
+          <TabsTrigger value="application-form">Application form</TabsTrigger>
+        </TabsList>
+        <TabsContent value="job-post-form">
+          <JobPostForm />
+        </TabsContent>
+        <TabsContent value="application-form">
+          <ApplicationForm />
+        </TabsContent>
+      </Tabs>
     </>
   );
 }
