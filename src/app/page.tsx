@@ -4,6 +4,8 @@ import { ROUTES } from "@/utils/constants";
 import { BarChart, Globe, Grid, Pencil, Search, Stars } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
+import Header from "./dashboard/components/header";
+import WidthConstraint from "@/components/width-constraint";
 
 export default function Home() {
   const headersList = headers();
