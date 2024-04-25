@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Login from "./login";
-import SignUp from "./signup";
+import SignUp from "./sign-up";
 
 const AuthModal = ({ type }: { type: "login" | "signup" }) => {
   const router = useRouter();

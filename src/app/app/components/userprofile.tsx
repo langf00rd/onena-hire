@@ -6,30 +6,24 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/config/supabase";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { logout, getUser } from "../../../../actions";
 
 export default function UserProfile() {
   const [currentUser, setCurrentUser] = useState<User>();
-  const router = useRouter();
   async function getProfile() {
-    const session = await supabase.auth.getSession();
-    if (session && session.data && session.data.session?.user) {
-      setCurrentUser(session.data.session.user);
+    const user = await getUser();
+    if (user && user.data && user.data?.user) {
+      setCurrentUser(user.data?.user);
     }
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    router.push("/");
+    await logout();
     toast.success("Successfully signed out");
-    if (error) {
-      toast.error(error.message);
-    }
   };
 
   useEffect(() => {

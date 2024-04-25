@@ -2,17 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/config/supabase";
-import { EyeOff, Eye, LoaderCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import PasswordInput from "@/components/ui/password-input";
+import { LoaderCircle } from "lucide-react";
+import React, { ChangeEvent, FormEvent, useState, useTransition } from "react";
 import { toast } from "sonner";
+import { signUpWithEmailAndPassword } from "../../../../actions";
+import useSupabaseClient from "@/utils/supabase/client";
 
-export default function Signup() {
-  const router = useRouter();
+export default function SignUp() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    // firstName: "",
+    // lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -24,9 +24,10 @@ export default function Signup() {
     invalidLength: "",
     unmatchedPassword: "",
   });
-  const { firstName, lastName, email, password, confirmPassword } = formData;
-  const [showPassword, setShowPassword] = useState(false);
+  const { email, password, confirmPassword } = formData;
   const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const supabase = useSupabaseClient();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,43 +37,28 @@ export default function Signup() {
     }));
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !email.trim() ||
-      !password.trim() ||
-      !confirmPassword.trim()
-    ) {
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
       toast.error("One or more fields empty");
       return;
     }
+    startTransition(async () => {
+      await signUpWithEmailAndPassword({ email, password });
+    });
+  };
 
+  const signUpWithGoogle = () => {
     setLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+    supabase.auth.signInWithOAuth({
+      provider: "google",
       options: {
-        emailRedirectTo: "http://localhost:3000/welcome",
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-        },
+        redirectTo: `${location.origin}/auth/callback`,
       },
     });
-    console.log(data);
     setLoading(false);
-    router.push("/app/overview");
-    if (error) {
-      setLoading(false);
-      throw new Error("failed");
-    }
   };
+
   const validatePassword = (password: string) => {
     if (password.length < 6) {
       setErrors((prev) => ({
@@ -104,7 +90,7 @@ export default function Signup() {
   return (
     <div className="py-4 space-y-4">
       <form onSubmit={handleSubmit}>
-        <fieldset className="w-full space-y-2">
+        {/* <fieldset className="w-full space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input
             type="text"
@@ -125,7 +111,7 @@ export default function Signup() {
             value={lastName}
             onChange={handleChange}
           />
-        </fieldset>
+        </fieldset> */}
         <fieldset className="w-full space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -139,56 +125,36 @@ export default function Signup() {
         </fieldset>
         <fieldset className="w-full space-y-2">
           <Label htmlFor="password">Password</Label>
-          <div className="w-full relative">
-            <Input
-              type={showPassword ? "text" : "password"}
-              key="password"
-              id="password"
-              required
-              name="password"
-              onBlur={(e) => validatePassword(e.target.value)}
-              value={password}
-              onChange={(e) => {
-                handleChange(e);
-                validatePassword(e.target.value);
-              }}
-            />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-4 top-2"
-            >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </button>
-          </div>
-
+          <PasswordInput
+            key="password"
+            id="password"
+            name="password"
+            value={password}
+            required
+            onBlur={(e) => validatePassword(e.target.value)}
+            onChange={(e) => {
+              handleChange(e);
+              validatePassword(e.target.value);
+            }}
+          />
           {errors.invalidLength && (
             <small className="text-red-500">{errors.invalidLength}</small>
           )}
         </fieldset>
         <fieldset className="w-full space-y-2">
           <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <div className="w-full relative">
-            <Input
-              type={showPassword ? "text" : "password"}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              required
-              onBlur={(e) => matchPassword(e.target.value)}
-              onChange={(e) => {
-                handleChange(e);
-                matchPassword(e.target.value);
-              }}
-            />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-4 top-2"
-            >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </button>
-          </div>
+
+          <PasswordInput
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            required
+            onBlur={(e) => matchPassword(e.target.value)}
+            onChange={(e) => {
+              handleChange(e);
+              matchPassword(e.target.value);
+            }}
+          />
           {errors.unmatchedPassword && (
             <small className="text-red-500">{errors.unmatchedPassword}</small>
           )}
@@ -202,7 +168,11 @@ export default function Signup() {
         or
         <div className="h-[1px] bg-gray-300 w-full" />
       </div>
-      <Button type="button" className="bg-black w-full text-white">
+      <Button
+        type="button"
+        className="bg-black w-full text-white"
+        onClick={signUpWithGoogle}
+      >
         Continue with Google
       </Button>
     </div>

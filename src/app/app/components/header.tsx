@@ -12,10 +12,10 @@ export default function Header() {
         </Link>
         <div className="gap-4 flex">
           <Button className="bg-gray-100 text-black hover:bg-gray-200" asChild>
-            <Link href="/sign-in">Login</Link>
+            <Link href="/auth/sign-in">Login</Link>
           </Button>
           <Button>
-            <Link href="/sign-up">Sign up</Link>
+            <Link href="/auth/sign-up">Sign up</Link>
           </Button>
         </div>
       </WidthConstraint>
