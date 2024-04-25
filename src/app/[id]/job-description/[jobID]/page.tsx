@@ -1,4 +1,4 @@
-import PageInfo from "@/app/app/components/page-info";
+import PageInfo from "@/dashboard/dashboard/components/page-info";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
@@ -12,12 +12,11 @@ export default function Page() {
         />
         <p>
           We are looking for a Full Stack Developer to produce scalable software
-          solutions. Youll be part of a cross-functional team that’s responsible
-          for the full software development life cycle, from conception to
-          deployment. As a Full Stack Developer, you should be comfortable
-          around both front-end and back-end coding languages, development
-          frameworks and third-party libraries. You should also be a team player
-          with a knack for visual design and utility.
+          solutions. Youll be part of a cross-functional team that’s responsible for the
+          full software development life cycle, from conception to deployment. As a Full
+          Stack Developer, you should be comfortable around both front-end and back-end
+          coding languages, development frameworks and third-party libraries. You should
+          also be a team player with a knack for visual design and utility.
         </p>
         <div className="space-y-4">
           <h2 className="text-xl">Requirements</h2>

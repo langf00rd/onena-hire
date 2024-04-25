@@ -3,14 +3,14 @@ import AsideNavItem from "./aside-nav-item";
 import { ReactNode } from "react";
 import { ROUTES } from "@/utils/constants";
 import Support from "./support";
-import UserProfile from "./userprofile";
+import UserProfile from "./user-profile";
 import Link from "next/link";
 
 export default function Aside() {
   return (
     <aside className="h-full w-[370px] p-10 flex flex-col justify-between">
       <div className="space-y-10">
-        <Link href="/app/overview">
+        <Link href="/dashboard/overview">
           <h1 className="text-3xl font-black">Onena Hire</h1>
         </Link>
         <div className="space-y-10">

@@ -10,10 +10,9 @@ export async function signUpWithEmailAndPassword(data: any) {
     password: data.password,
   });
   if (error) {
-    console.log(error);
-    return redirect("/sign-up?message=Could not authenticate user");
+    throw new Error(error.message);
   }
-  return redirect("/app/overview");
+  return redirect("/dashboard/overview");
 }
 
 export async function signInWithEmailAndPassword(data: any) {
@@ -23,11 +22,10 @@ export async function signInWithEmailAndPassword(data: any) {
     password: data.password,
   });
   if (error) {
-    console.log(error);
-    return JSON.stringify({ error: { code: error.code, message: error.message } });
+    throw new Error(error.message);
   }
 
-  return redirect("/app/overview");
+  return redirect("/dashboard/overview");
 }
 
 export async function getUserSession() {
@@ -44,7 +42,7 @@ export async function logout() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
   if (error) {
-    console.log(error);
+    throw new Error(error.message);
   }
   return redirect("/");
 }

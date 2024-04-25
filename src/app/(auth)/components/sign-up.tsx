@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,12 +8,9 @@ import { LoaderCircle } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { signUpWithEmailAndPassword } from "../../../../actions";
-import useSupabaseClient from "@/utils/supabase/client";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    // firstName: "",
-    // lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -25,9 +23,7 @@ export default function SignUp() {
     unmatchedPassword: "",
   });
   const { email, password, confirmPassword } = formData;
-  const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const supabase = useSupabaseClient();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,19 +40,12 @@ export default function SignUp() {
       return;
     }
     startTransition(async () => {
-      await signUpWithEmailAndPassword({ email, password });
+      try {
+        await signUpWithEmailAndPassword({ email, password });
+      } catch (error) {
+        toast.error(error.message ?? "Oops something happened");
+      }
     });
-  };
-
-  const signUpWithGoogle = () => {
-    setLoading(true);
-    supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-    setLoading(false);
   };
 
   const validatePassword = (password: string) => {
@@ -90,28 +79,6 @@ export default function SignUp() {
   return (
     <div className="py-4 space-y-4">
       <form onSubmit={handleSubmit}>
-        {/* <fieldset className="w-full space-y-2">
-          <Label htmlFor="firstName">First Name</Label>
-          <Input
-            type="text"
-            id="firstName"
-            name="firstName"
-            required
-            value={firstName}
-            onChange={handleChange}
-          />
-        </fieldset>
-        <fieldset className="w-full space-y-2">
-          <Label htmlFor="lastName">Last Name</Label>
-          <Input
-            type="text"
-            id="lastName"
-            required
-            name="lastName"
-            value={lastName}
-            onChange={handleChange}
-          />
-        </fieldset> */}
         <fieldset className="w-full space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -143,7 +110,6 @@ export default function SignUp() {
         </fieldset>
         <fieldset className="w-full space-y-2">
           <Label htmlFor="confirmPassword">Confirm Password</Label>
-
           <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
@@ -160,21 +126,9 @@ export default function SignUp() {
           )}
         </fieldset>
         <Button type="submit" className="bg-black w-full text-white">
-          {loading ? <LoaderCircle className="animate-spin" /> : "Sign up"}
+          {isPending ? <LoaderCircle className="animate-spin" /> : "Sign up"}
         </Button>
       </form>
-      <div className="flex items-center gap-2">
-        <div className="h-[1px] bg-gray-300 w-full" />
-        or
-        <div className="h-[1px] bg-gray-300 w-full" />
-      </div>
-      <Button
-        type="button"
-        className="bg-black w-full text-white"
-        onClick={signUpWithGoogle}
-      >
-        Continue with Google
-      </Button>
     </div>
   );
 }

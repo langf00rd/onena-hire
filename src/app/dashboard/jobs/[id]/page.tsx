@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Application } from "@/utils/types";
 import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
-import { ApplicantsTable } from "../../components/tables/applicants";
+import { ApplicantsTable } from "../../components/tables/dashboardlicants";
 import {
   ExternalLink,
   Facebook,
@@ -23,11 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { CopyIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -87,8 +83,8 @@ export default function Page() {
               <div>
                 <h3>Terminate this job post</h3>
                 <p>
-                  This will permanently delete your job post and remove all
-                  related data from our servers, including applications
+                  This will permanently delete your job post and remove all related data
+                  from our servers, including applications
                 </p>
               </div>
               <Dialog>
@@ -99,9 +95,9 @@ export default function Page() {
                   <DialogHeader>
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
                     <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your job post and remove all related data from our
-                      servers, including applications
+                      This action cannot be undone. This will permanently delete your job
+                      post and remove all related data from our servers, including
+                      applications
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Header from "./app/components/header";
+import Header from "./dashboard/components/header";
 import WidthConstraint from "@/components/width-constraint";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
             <li>use AI to find best applicant(s)</li>
           </ul>
           <Button asChild className="max-w-[200px]">
-            <Link href="/app/jobs">Go to app</Link>
+            <Link href="/dashboard/jobs">Go to app</Link>
           </Button>
         </WidthConstraint>
       </main>

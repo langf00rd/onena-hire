@@ -22,8 +22,12 @@ export default function UserProfile() {
   }
 
   const signOut = async () => {
-    await logout();
-    toast.success("Successfully signed out");
+    try {
+      await logout();
+      toast.success("Successfully signed out");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
