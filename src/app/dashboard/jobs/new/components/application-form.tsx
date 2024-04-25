@@ -37,10 +37,7 @@ export default function ApplicationForm() {
         <RenderSelectedInputFieldComponents components={inputFields} />
       </div>
       <div className="flex-1 sticky top-[100px]">
-        <InputFieldComponent
-          onAddComponent={handleAddComponent}
-          onLabelChange={console.log}
-        />
+        <InputFieldComponent onAddComponent={handleAddComponent} />
       </div>
     </div>
   );
@@ -86,7 +83,6 @@ function RenderSelectedInputFieldComponents(props: {
 }
 
 function InputFieldComponent(props: {
-  onLabelChange: (value: string) => void;
   onAddComponent: (componentProps: InputFieldComponentProps) => void;
 }) {
   const [labelValue, setLabelValue] = useState("");
@@ -132,7 +128,6 @@ function InputFieldComponent(props: {
         <Input
           required
           onChange={(e) => {
-            props.onLabelChange(e.target.value);
             setLabelValue(e.target.value);
           }}
         />

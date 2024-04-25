@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/utils/supabase";
 import { Check, Loader, Plus, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -45,20 +44,27 @@ export default function JobPostForm() {
 
     setIsLoading(true);
 
-    const { data, error } = await supabase
-      .from("job_posts")
-      .insert([{ role, description, more, responsibilities, requirements }])
-      .select();
+    const response = await fetch("/api/job-post", {
+      method: "POST",
+      body: JSON.stringify({
+        role,
+        description,
+        more,
+        responsibilities,
+        requirements,
+      }),
+    });
 
-    if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
+    const body = await response.json();
+
+    if (response.status !== 200) {
+      setIsLoading(false);
+      return toast({
+        description: body.message,
       });
     }
 
-    console.log(data);
-    setIsLoading(false);
+    console.log("GOOD", body);
   }
 
   return (
