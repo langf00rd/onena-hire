@@ -7,7 +7,6 @@ export const ROUTES = {
     new: "/app/jobs/new",
   },
 };
-
 export const EMAIL = "stephenokyere621@gmail.com";
 export const JOB_POST_SECTIONS = [
   "job title",
