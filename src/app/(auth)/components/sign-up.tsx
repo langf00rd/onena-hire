@@ -42,7 +42,7 @@ export default function SignUp() {
     startTransition(async () => {
       try {
         await signUpWithEmailAndPassword({ email, password });
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.message ?? "Oops something happened");
       }
     });

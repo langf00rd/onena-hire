@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { logout, getUser } from "../../../../actions";
+import { toast } from "@/components/ui/use-toast";
 
 export default function UserProfile() {
   const [currentUser, setCurrentUser] = useState<User>();
@@ -24,9 +24,9 @@ export default function UserProfile() {
   const signOut = async () => {
     try {
       await logout();
-      toast.success("Successfully signed out");
-    } catch (error) {
-      toast.error(error.message);
+      toast({ description: "Successfully signed out" });
+    } catch (error: any) {
+      toast({ description: error.message });
     }
   };
 
