@@ -44,9 +44,12 @@ dependencies:
   '@radix-ui/react-toast':
     specifier: ^1.1.5
     version: 1.1.5(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
+  '@supabase/ssr':
+    specifier: ^0.3.0
+    version: 0.3.0(@supabase/supabase-js@2.42.7)
   '@supabase/supabase-js':
-    specifier: ^2.42.5
-    version: 2.42.5
+    specifier: ^2.42.7
+    version: 2.42.7
   '@tanstack/react-table':
     specifier: ^8.16.0
     version: 8.16.0(react-dom@18.2.0)(react@18.2.0)
@@ -62,12 +65,18 @@ dependencies:
   next:
     specifier: 14.2.2
     version: 14.2.2(react-dom@18.2.0)(react@18.2.0)
+  nodemailer:
+    specifier: ^6.9.13
+    version: 6.9.13
   react:
     specifier: ^18
     version: 18.2.0
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
+  sonner:
+    specifier: ^1.4.41
+    version: 1.4.41(react-dom@18.2.0)(react@18.2.0)
   tailwind-merge:
     specifier: ^2.3.0
     version: 2.3.0
@@ -1196,14 +1205,14 @@ packages:
     resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
     dev: true
 
-  /@supabase/auth-js@2.63.1:
-    resolution: {integrity: sha512-iwdmIc/w5QN7aMfYThEgUt1l2i0KuohZ4XNk1adECg0LETQYEzmbVToKFKZLLZ+GyNtpsExSgVY/AUWOwubGXA==}
+  /@supabase/auth-js@2.64.1:
+    resolution: {integrity: sha512-tA2PXLoWEzhD0N1Vysree+HftfeWBbFV0E+taND5rj/pZTjkwKq/9GlrnXkbs5pnw+tsnABDRo2WLZmymihGdA==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
     dev: false
 
-  /@supabase/functions-js@2.3.0:
-    resolution: {integrity: sha512-GPXzSl4MXdc0P7q+TvE8XgaPdvGBeAJ0p6AN0tbKcezpkp32mpsDf58JXaWOJGyiWSVJn6z1W73eKxf6NZNaFA==}
+  /@supabase/functions-js@2.3.1:
+    resolution: {integrity: sha512-QyzNle/rVzlOi4BbVqxLSH828VdGY1RElqGFAj+XeVypj6+PVtMlD21G8SDnsPQDtlqqTtoGRgdMlQZih5hTuw==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
     dev: false
@@ -1233,17 +1242,27 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@supabase/ssr@0.3.0(@supabase/supabase-js@2.42.7):
+    resolution: {integrity: sha512-lcVyQ7H6eumb2FB1Wa2N+jYWMfq6CFza3KapikT0fgttMQ+QvDgpNogx9jI8bZgKds+XFSMCojxFvFb+gwdbfA==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.33.1
+    dependencies:
+      '@supabase/supabase-js': 2.42.7
+      cookie: 0.5.0
+      ramda: 0.29.1
+    dev: false
+
   /@supabase/storage-js@2.5.5:
     resolution: {integrity: sha512-OpLoDRjFwClwc2cjTJZG8XviTiQH4Ik8sCiMK5v7et0MDu2QlXjCAW3ljxJB5+z/KazdMOTnySi+hysxWUPu3w==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
     dev: false
 
-  /@supabase/supabase-js@2.42.5:
-    resolution: {integrity: sha512-T/FlVmNHR/MDl8KhmNLb94dh+cTpqyvFlNI/Zd97dwS1yCm59xM+sTzmQLKnGNY5sPuwp40/w52bWrczdjOYtA==}
+  /@supabase/supabase-js@2.42.7:
+    resolution: {integrity: sha512-BEIEYe5KJpzd8Z3k4CKyjNuBmgSihDdE8MJO/Fg7O5h/lQg8qOp1MMWLWPP5aVKt4TYled/W82ePNJflqc2JbQ==}
     dependencies:
-      '@supabase/auth-js': 2.63.1
-      '@supabase/functions-js': 2.3.0
+      '@supabase/auth-js': 2.64.1
+      '@supabase/functions-js': 2.3.1
       '@supabase/node-fetch': 2.6.15
       '@supabase/postgrest-js': 1.15.2
       '@supabase/realtime-js': 2.9.4
@@ -1691,6 +1710,11 @@ packages:
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
+
+  /cookie@0.5.0:
+    resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -2950,6 +2974,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
+  /nodemailer@6.9.13:
+    resolution: {integrity: sha512-7o38Yogx6krdoBf3jCAqnIN4oSQFx+fMa0I7dK1D+me9kBxx12D+/33wSb+fhOCtIxvYJ+4x4IMEhmhCKfAiOA==}
+    engines: {node: '>=6.0.0'}
+    dev: false
+
   /normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -3208,6 +3237,10 @@ packages:
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  /ramda@0.29.1:
+    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+    dev: false
+
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -3448,6 +3481,16 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
     dev: true
+
+  /sonner@1.4.41(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-uG511ggnnsw6gcn/X+YKkWPo5ep9il9wYi3QJxHsYe7yTZ4+cOd1wuodOUmOpFuXL+/RE3R04LczdNCDygTDgQ==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}

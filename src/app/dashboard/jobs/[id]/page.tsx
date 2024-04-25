@@ -1,19 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Application } from "@/utils/types";
-import PageInfo from "../../components/page-info";
-import RenderOnClient from "../../components/render-on-client";
-import { ApplicantsTable } from "../../components/tables/applicants";
-import {
-  ExternalLink,
-  Facebook,
-  Linkedin,
-  LucideFacebook,
-  Share2,
-  Twitter,
-  TwitterIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -23,14 +8,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { CopyIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
-import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Application } from "@/utils/types";
+import { CopyIcon } from "@radix-ui/react-icons";
+import {
+  ExternalLink,
+  Facebook,
+  Linkedin,
+  Share2,
+  Twitter,
+} from "lucide-react";
+import Link from "next/link";
+import PageInfo from "../../components/page-info";
+import RenderOnClient from "../../components/render-on-client";
+import { ApplicantsTable } from "../../components/tables/applicants";
 
 export default function Page() {
   return (
