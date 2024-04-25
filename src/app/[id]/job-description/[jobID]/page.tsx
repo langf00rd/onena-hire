@@ -1,4 +1,4 @@
-import PageInfo from "@/app/app/components/page-info";
+import PageInfo from "@/app/dashboard/components/page-info";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
