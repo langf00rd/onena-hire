@@ -18,3 +18,17 @@ export interface PageProps {
   params: Record<string, unknown>;
   searchParams: Record<string, unknown>;
 }
+
+export interface JobPost {
+  id: number;
+  more: string;
+  poster: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  role: string;
+  requirements: string[];
+  responsibilities: string[];
+  organization: string;
+  input_fields: unknown;
+}

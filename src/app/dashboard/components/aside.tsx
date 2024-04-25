@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function Aside() {
   return (
-    <aside className="h-full w-[370px] p-10 flex flex-col justify-between">
+    <aside className="h-full w-[450px] p-10 flex flex-col justify-between">
       <div className="space-y-10">
         <h1 className="text-3xl font-black">Onena Hire</h1>
         <div className="space-y-10">

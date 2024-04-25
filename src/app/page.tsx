@@ -11,7 +11,7 @@ export default function Home() {
         <li>use AI to find best applicant(s)</li>
       </ul>
       <Button asChild>
-        <Link href="/app/jobs">Go to app</Link>
+        <Link href="/dashboard/jobs">Go to app</Link>
       </Button>
     </main>
   );
