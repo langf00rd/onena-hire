@@ -92,7 +92,7 @@ fieldset {
 }
 
 form {
-    @apply space-y-5;
+    @apply space-y-7;
 }
 
 h1,

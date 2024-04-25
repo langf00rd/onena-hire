@@ -9,3 +9,10 @@ export const ROUTES = {
 };
 
 export const EMAIL = "stephenokyere621@gmail.com";
+export const JOB_POST_SECTIONS = [
+  "job title",
+  "description",
+  "requirements",
+  "responsibilities",
+  "more",
+];
