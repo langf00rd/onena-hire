@@ -2,11 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/config/supabase";
 import { EyeOff, Eye, LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 
 export default function Signup() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -37,7 +40,7 @@ export default function Signup() {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (
       !firstName.trim() ||
@@ -49,9 +52,26 @@ export default function Signup() {
       toast.error("One or more fields empty");
       return;
     }
+
     setLoading(true);
-    console.log(formData);
-    // Perform form submission logic here
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: "http://localhost:3000/welcome",
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
+    });
+    console.log(data);
+    setLoading(false);
+    router.push("/app/overview");
+    if (error) {
+      setLoading(false);
+      throw new Error("failed");
+    }
   };
   const validatePassword = (password: string) => {
     if (password.length < 6) {
