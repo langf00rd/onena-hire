@@ -15,3 +15,13 @@ export const JOB_POST_SECTIONS = [
   "responsibilities",
   "more",
 ];
+
+export const INPUT_FIELD_TYPES = [
+  "text",
+  "multi-text",
+  "file",
+  "email",
+  "single-select",
+  "multi-select",
+  "number",
+];
