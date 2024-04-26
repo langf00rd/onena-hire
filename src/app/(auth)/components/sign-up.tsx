@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordInput from "@/components/ui/password-input";
+import { toast } from "@/components/ui/use-toast";
+import { ROUTES } from "@/utils/constants";
+import { createClient } from "@/utils/supabase/client";
 import { LoaderCircle } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useState, useTransition } from "react";
-import { toast } from "sonner";
-import { signUpWithEmailAndPassword } from "../../../../actions";
+import cookie from "js-cookie";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -33,19 +35,42 @@ export default function SignUp() {
     }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-      toast.error("One or more fields empty");
-      return;
-    }
-    startTransition(async () => {
-      try {
-        await signUpWithEmailAndPassword({ email, password });
-      } catch (error: any) {
-        toast.error(error.message ?? "Oops something happened");
-      }
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email")!.toString();
+    const password = formData.get("password")!.toString();
+    const firstName = formData.get("first-name")!.toString();
+    const lastName = formData.get("last-name")!.toString();
+
+    const supabase = createClient();
+
+    const { error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
     });
+
+    if (signUpError) {
+      return toast({
+        description: signUpError.message,
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("users")
+      .insert([{ email, first_name: firstName, last_name: lastName }])
+      .select();
+
+    if (error) {
+      return toast({
+        description: error.message,
+      });
+    }
+
+    cookie.set("db_user", JSON.stringify(data[0]));
+
+    window.location.href = ROUTES.createOrganization;
   };
 
   const validatePassword = (password: string) => {
@@ -78,9 +103,19 @@ export default function SignUp() {
 
   return (
     <div className="py-4 space-y-4">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleFormSubmit}>
+        <div className="flex gap-5">
+          <fieldset>
+            <Label htmlFor="first-name">First name</Label>
+            <Input required className="w-full" name="first-name" />
+          </fieldset>
+          <fieldset>
+            <Label htmlFor="last-name">Last name</Label>
+            <Input required className="w-full" name="last-name" />
+          </fieldset>
+        </div>
         <fieldset className="w-full space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Email (personal or company email)</Label>
           <Input
             type="email"
             id="email"
