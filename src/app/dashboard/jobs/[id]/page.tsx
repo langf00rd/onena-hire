@@ -15,7 +15,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Application } from "@/utils/types";
+import { createClient } from "@/utils/supabase/server";
+import { JobApplication, JobPost, PageProps } from "@/utils/types";
 import { CopyIcon } from "@radix-ui/react-icons";
 import {
   ExternalLink,
@@ -29,20 +30,60 @@ import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
 import { ApplicantsTable } from "../../components/tables/applicants";
 
-export default function Page() {
+export default async function Page(props: PageProps) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("job_posts")
+    .select(
+      `
+      id,
+      role,
+      input_fields,
+      requirements,
+      responsibilities,
+      poster,
+      description,
+      organization,
+      custom_sections,
+      input_fields,
+      organizations(id,domain)
+    `,
+    )
+    .eq("id", props.params.id);
+
+  let { data: applications, error: applicationsError } = await supabase
+    .from("applications")
+    .select()
+    .eq("job_post", props.params.id);
+
+  if (error) return <p>{error.message}</p>;
+
+  if (applicationsError) return <p>{applicationsError.message}</p>;
+
+  const jobPostData: JobPost = data[0] as unknown as JobPost;
+
   return (
     <>
       <PageInfo
         showBackButton
-        title="Senior software engineer job post"
+        title={jobPostData.role}
         actionButtons={
           <div className="flex gap-5">
-            <Link href="/acme" target="_blank">
-              <Button variant="secondary">
-                <ExternalLink size={15} />
-                View job post
-              </Button>
-            </Link>
+            {props.params && jobPostData.organizations && (
+              <Link
+                href={getJobPostLink(
+                  jobPostData.id,
+                  jobPostData.organizations.domain,
+                )}
+                target="_blank"
+              >
+                <Button variant="secondary">
+                  <ExternalLink size={15} />
+                  View job post
+                </Button>
+              </Link>
+            )}
             <Popover>
               <PopoverTrigger>
                 <Button variant="secondary">
@@ -75,7 +116,12 @@ export default function Page() {
         </TabsList>
         <TabsContent value="account">
           <RenderOnClient>
-            <ApplicantsTable data={data} />
+            <ApplicantsTable
+              schema={jobPostData.input_fields}
+              data={getFormattedInputFieldValues(
+                applications as JobApplication[],
+              )}
+            />
           </RenderOnClient>
         </TabsContent>
         <TabsContent value="password">
@@ -114,122 +160,17 @@ export default function Page() {
   );
 }
 
-const data: Application[] = [
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-  {
-    id: "123",
-    email: "john@acme.co",
-    first_name: "John",
-    last_name: "Doe",
-    resume_link: "https://resu.me/12jnk1",
-    time_spent: 12032,
-    created_at: "12-03-2024",
-    location: {
-      country: "Ghana",
-      city: "Accra",
-    },
-  },
-];
+function getFormattedInputFieldValues(data: JobApplication[]) {
+  const jobApplications: Record<string, unknown>[] = [];
+  for (const jobApplication of data) {
+    let obj = jobApplication.input_values.reduce((accumulator, current) => {
+      return { ...accumulator, ...current };
+    }, {});
+    jobApplications.push(obj);
+  }
+  return jobApplications;
+}
+
+function getJobPostLink(jobPostID: number | string, domain: string) {
+  return `/organization/${domain}/jobs/${jobPostID}`;
+}

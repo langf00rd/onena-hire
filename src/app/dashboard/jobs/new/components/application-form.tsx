@@ -1,7 +1,9 @@
+"use client";
+
+import RenderInputFieldFromType from "@/components/render-input-field-from-type";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,20 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { INPUT_FIELD_TYPES } from "@/utils/constants";
+import { InputFieldComponentProps } from "@/utils/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-interface InputFieldComponentProps {
-  id: string;
-  type: string;
-  label: string;
-  maxChars?: number;
-  required?: boolean;
-}
-
-export default function ApplicationForm() {
+export default function ApplicationForm(props: {
+  onSubmit: (inputFields: InputFieldComponentProps[]) => void;
+}) {
   const [inputFields, setInputFields] = useState<InputFieldComponentProps[]>(
     [],
   );
@@ -39,38 +35,14 @@ export default function ApplicationForm() {
       <div className="flex-1 sticky top-[100px]">
         <InputFieldComponent onAddComponent={handleAddComponent} />
       </div>
+      <Button onClick={() => props.onSubmit(inputFields)}>
+        Create job post
+      </Button>
     </div>
   );
 }
 
-function RenderInputFieldFromType(props: InputFieldComponentProps) {
-  if (["file", "text", "email", "number"].includes(props.type)) {
-    return (
-      <fieldset>
-        <Label>
-          {props.label} {props.required && "*"}
-        </Label>
-        <Input
-          type={props.type}
-          name={props.id}
-          required={props.required}
-          className="w-full"
-        />
-      </fieldset>
-    );
-  } else if (props.type === "multi-text") {
-    return (
-      <fieldset>
-        <Label>
-          {props.label} {props.required && "*"}
-        </Label>
-        <Textarea className="w-full" />
-      </fieldset>
-    );
-  } else return <></>;
-}
-
-function RenderSelectedInputFieldComponents(props: {
+export function RenderSelectedInputFieldComponents(props: {
   components: InputFieldComponentProps[];
 }) {
   return (

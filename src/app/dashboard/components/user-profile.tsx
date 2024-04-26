@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Accordion,
   AccordionContent,
@@ -6,57 +7,57 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { logout, getUser } from "../../../../actions";
 import { toast } from "@/components/ui/use-toast";
+import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { User2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function UserProfile() {
-  const [currentUser, setCurrentUser] = useState<User>();
-  async function getProfile() {
-    const user = await getUser();
-    if (user && user.data && user.data?.user) {
-      setCurrentUser(user.data?.user);
-    }
-  }
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
 
-  const signOut = async () => {
+  async function handleSignOut() {
     try {
-      await logout();
-      toast({ description: "Successfully signed out" });
+      await supabase.auth.signOut();
+      window.location.reload();
     } catch (error: any) {
       toast({ description: error.message });
     }
-  };
+  }
 
   useEffect(() => {
-    getProfile();
-  }, []);
+    (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+    })();
+  }, [supabase]);
 
   return (
-    <div>
-      <Accordion type="single" collapsible>
-        <AccordionItem value="item-1" className="border-0 px-3 -mt-6">
-          <AccordionTrigger>
-            <div className="flex items-center gap-2">
-              <Avatar className="w-7 h-7">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p>{currentUser?.email}</p>
+    <Accordion type="single" collapsible className="max-w-full">
+      <AccordionItem className="border-0" value="item-1">
+        <AccordionTrigger>
+          <div className="flex items-center gap-2">
+            <div className="bg-accent rounded-full p-2">
+              <User2 size={20} />
             </div>
-          </AccordionTrigger>
-          <AccordionContent className="p-0">
-            <Button className="w-full" variant="ghost" onClick={signOut}>
-              Sign out
-            </Button>
-            <Button variant="ghost" className="w-full">
-              Referral
-            </Button>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
+            <p className="max-w-[100px] overflow-auto text-ellipsis">
+              {user?.email}
+            </p>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <Button
+            className="w-full"
+            variant="destructive"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </Button>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

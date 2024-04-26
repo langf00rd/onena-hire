@@ -5,8 +5,12 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Check, Loader, Plus, X } from "lucide-react";
 import { FormEvent, useState } from "react";
+import { ApplicationJobPost, DBUser, JobPost } from "@/utils/types";
+import cookie from "js-cookie";
 
-export default function JobPostForm() {
+export default function JobPostForm(props: {
+  onContinue: (formData: ApplicationJobPost) => void;
+}) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [newRequirement, setNewRequirement] = useState("");
@@ -38,33 +42,27 @@ export default function JobPostForm() {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const role = formData.get("role");
-    const description = formData.get("description");
-    const more = formData.get("more");
+    const role = formData.get("role")?.toString();
+    const description = formData.get("description")?.toString();
 
-    setIsLoading(true);
+    const userCookie = cookie.get("db_user");
 
-    const response = await fetch("/api/job-post", {
-      method: "POST",
-      body: JSON.stringify({
-        role,
-        description,
-        more,
-        responsibilities,
-        requirements,
-      }),
-    });
-
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      setIsLoading(false);
+    if (!userCookie) {
       return toast({
-        description: body.message,
+        description: "please login again",
       });
     }
 
-    console.log("GOOD", body);
+    const parsedUserCookie: DBUser = JSON.parse(userCookie);
+
+    props.onContinue({
+      role: role!,
+      description: description!,
+      responsibilities,
+      requirements,
+      organization: Number(parsedUserCookie.organization),
+      poster: Number(parsedUserCookie.id),
+    });
   }
 
   return (
@@ -110,7 +108,7 @@ export default function JobPostForm() {
             onChange={(e) => setNewRequirement(e.target.value)}
             placeholder="Degree in Computer Science or a relevant field"
           />
-          <Button variant="secondary" onClick={addRequirement}>
+          <Button type="button" variant="secondary" onClick={addRequirement}>
             <Plus size={15} />
             Add
           </Button>
@@ -145,7 +143,7 @@ export default function JobPostForm() {
             onChange={(e) => setNewResponsibility(e.target.value)}
             placeholder="Write technical documentation"
           />
-          <Button variant="secondary" onClick={addResponsibility}>
+          <Button type="button" variant="secondary" onClick={addResponsibility}>
             <Plus size={15} />
             Add
           </Button>
@@ -160,12 +158,9 @@ export default function JobPostForm() {
           placeholder="Talk about any other thing, eg. salary, interview stages, etc"
         />
       </fieldset>
-      <div className="space-x-3">
-        <Button>
-          {isLoading ? <Loader className="animate-spin" /> : "Create"}
-        </Button>
-        <Button variant="secondary">Save as draft</Button>
-      </div>
+      <Button>
+        {isLoading ? <Loader className="animate-spin" /> : "Continue"}
+      </Button>
     </form>
   );
 }

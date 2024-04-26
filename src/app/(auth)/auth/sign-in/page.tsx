@@ -1,7 +1,7 @@
 import React from "react";
 import Login from "../../components/login";
 
-const Page = (): React.JSX.Element => {
+export default function Page() {
   return (
     <div className="p-10">
       <div className="max-w-[500px] mx-auto">
@@ -10,6 +10,4 @@ const Page = (): React.JSX.Element => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}

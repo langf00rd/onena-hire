@@ -1,10 +1,11 @@
 "use server";
 
+import { ROUTES } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function signUpWithEmailAndPassword(data: any) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { error } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
@@ -16,16 +17,17 @@ export async function signUpWithEmailAndPassword(data: any) {
 }
 
 export async function signInWithEmailAndPassword(data: any) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { error } = await supabase.auth.signInWithPassword({
     email: data.email,
     password: data.password,
   });
+
   if (error) {
     throw new Error(error.message);
   }
 
-  return redirect("/dashboard/overview");
+  return redirect(ROUTES.overview);
 }
 
 export async function getUserSession() {

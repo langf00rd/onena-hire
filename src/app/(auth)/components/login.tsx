@@ -1,42 +1,56 @@
 "use client";
 
-import { FormEvent, useState, useTransition } from "react";
+import { FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PasswordInput from "@/components/ui/password-input";
-import { LoaderCircle } from "lucide-react";
-import { signInWithEmailAndPassword } from "../../../../actions";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/use-toast";
+import { ROUTES } from "@/utils/constants";
+import { createClient } from "@/utils/supabase/client";
+import cookie from "js-cookie";
 
 export default function Login() {
-  const [isPending, startTransition] = useTransition();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onSubmitHandler = async (e: FormEvent) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
-    startTransition(async () => {
-      try {
-        await signInWithEmailAndPassword({ email, password });
-      } catch (error: any) {
-        toast.error((error.message as string) ?? "Oops something happened");
-      }
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email")!.toString();
+    const password = formData.get("password")!.toString();
+
+    const supabase = createClient();
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
+
+    if (signInError) {
+      return toast({
+        description: signInError.message,
+      });
+    }
+
+    let { data: users, error } = await supabase
+      .from("users")
+      .select()
+      .eq("email", email);
+
+    if (error || !users) {
+      return toast({
+        description: error?.message,
+      });
+    }
+
+    cookie.set("db_user", JSON.stringify(users[0]));
+
+    window.location.href = ROUTES.overview;
   };
 
   return (
     <div className="py-4 space-y-4">
-      <form className="w-full space-y-4" onSubmit={onSubmitHandler}>
+      <form className="w-full space-y-4" onSubmit={handleFormSubmit}>
         <label htmlFor="">Email</label>
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <Input type="email" id="email" name="email" required />
         <div className="w-full space-y-2">
           <label htmlFor="">Password</label>
           <PasswordInput
@@ -44,13 +58,9 @@ export default function Login() {
             id="password"
             name="password"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button className="w-full" type="submit">
-          {isPending ? <LoaderCircle className="animate-spin" /> : "Sign In"}
-        </Button>
+        <Button>Continue</Button>
       </form>
     </div>
   );
