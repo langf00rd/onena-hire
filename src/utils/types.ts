@@ -74,3 +74,13 @@ export interface InputFieldComponentProps {
   maxChars?: number;
   required?: boolean;
 }
+
+export interface Organization {
+  id: number;
+  updated_at?: string;
+  created_at: string;
+  employees_num: string;
+  name: string;
+  website?: string;
+  domain: string;
+}
