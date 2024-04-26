@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Header from "./dashboard/components/header";
-import WidthConstraint from "@/components/width-constraint";
 
 export default function Home() {
   return (

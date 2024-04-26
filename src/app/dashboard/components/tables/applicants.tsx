@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -18,16 +14,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -47,146 +38,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { JobApplication, JobPost } from "@/utils/types";
 import Link from "next/link";
-import { Link2 } from "lucide-react";
-import { Application } from "@/utils/types";
-import { Progress } from "@/components/ui/progress";
 
-export const columns: ColumnDef<Application>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: " ",
-    header: "Name",
-    cell: (cell) => (
-      <div>
-        {cell.row.original.first_name} {cell.row.original.last_name}
-      </div>
-    ),
-  },
-  {
-    accessorKey: " ",
-    header: "Location",
-    cell: (cell) => (
-      <div>
-        {cell.row.original.location.city}, {cell.row.original.location.country}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "resume_link",
-    header: "Resume",
-    cell: (cell) => (
-      <Link
-        href={cell.row.original.resume_link}
-        target="_blank"
-        className="underline flex items-center gap-1 text-blue-500"
-      >
-        <Link2 size={15} />
-        <p>{new URL(cell.row.original.resume_link).host}</p>
-      </Link>
-    ),
-  },
-  {
-    accessorKey: "created_at",
-    header: "Date",
-  },
-  {
-    accessorKey: "time_spent",
-    header: "Time spent",
-    cell: (cell) => (
-      <p>{(cell.row.original.time_spent / 1000).toFixed(0)} mins</p>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: " ",
-    header: "Match rate",
-    cell: () => {
-      const value = Number((Math.random() * 100).toFixed(0));
-      return (
-        <>
-          <p
-            className={`
-              font-semibold
-      ${value <= 30 && "text-red-500"}
-      ${value >= 30 && value <= 50 && "text-yellow-500"}
-      ${value >= 50 && value <= 70 && "text-range-500"}
-      ${value >= 70 && "text-green-500"}
-      `}
-          >
-            {value}%
-          </p>
-        </>
-      );
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+function generateColumns(schema: JobPost["input_fields"]) {
+  const columnDefs: ColumnDef<Record<string, unknown>>[] = [];
+  for (const field of schema) {
+    columnDefs.push({
+      accessorKey: field.label.toLowerCase().replaceAll(" ", "_"),
+      header: field.label,
+      cell: (cell) => {
+        const value = String(cell.getValue());
+        if (field.type === "url") {
+          return (
+            <Link
+              target="_blank"
+              className="underline text-blue-600"
+              href={value}
             >
-              Copy application ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View full application</DropdownMenuItem>
-            <DropdownMenuItem>Export</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+              {value}
+            </Link>
+          );
+        } else return <div>{value}</div>;
+      },
+    });
+  }
+  return columnDefs;
+}
 
-export function ApplicantsTable(props: { data: Application[] }) {
+export function ApplicantsTable(props: {
+  data: JobApplication["input_values"];
+  schema: JobPost["input_fields"];
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -197,7 +80,7 @@ export function ApplicantsTable(props: { data: Application[] }) {
 
   const table = useReactTable({
     data: props.data,
-    columns,
+    columns: generateColumns(props.schema),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -225,7 +108,6 @@ export function ApplicantsTable(props: { data: Application[] }) {
           }
           className="max-w-sm"
         />
-
         <Dialog>
           <DialogTrigger asChild>
             <Button>Apply filters</Button>
@@ -308,7 +190,7 @@ export function ApplicantsTable(props: { data: Application[] }) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={generateColumns(props.schema).length}
                   className="h-24 text-center"
                 >
                   No results.

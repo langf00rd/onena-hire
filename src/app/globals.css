@@ -80,7 +80,7 @@ body {
 }
 
 * {
-    @apply antialiased;
+    @apply antialiased scroll-smooth;
 }
 
 #public-job-desc p {
@@ -88,7 +88,7 @@ body {
 }
 
 fieldset {
-    @apply space-y-2;
+    @apply space-y-2 w-full;
 }
 
 form {

@@ -14,6 +14,13 @@ export interface Application {
   };
 }
 
+export interface JobApplication {
+  id: number;
+  created_at: string;
+  job_post: number;
+  input_values: Record<string, unknown>[];
+}
+
 export interface PageProps {
   params: Record<string, unknown>;
   searchParams: Record<string, unknown>;
@@ -21,14 +28,49 @@ export interface PageProps {
 
 export interface JobPost {
   id: number;
-  more: string;
-  poster: string;
+  poster: number;
   description: string;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
   role: string;
   requirements: string[];
   responsibilities: string[];
-  organization: string;
-  input_fields: unknown;
+  organization: number;
+  organizations: { name: string; domain: string };
+  input_fields: InputFieldComponentProps[];
+  [key: string]: unknown;
+}
+
+export type ApplicationJobPost = Omit<
+  JobPost,
+  "id" | "updated_at" | "created_at" | "organizations" | "input_fields"
+>;
+
+export interface DBUser {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  organization: number;
+}
+
+// export interface JobPost {
+//   role: string;
+//   description: string;
+//   responsibilities: string[];
+//   requirements: string[];
+//   organization: number;
+//   custom_sections: string;
+//   input_fields: string;
+//   poster: number;
+// }
+
+export interface InputFieldComponentProps {
+  id: string;
+  type: string;
+  label: string;
+  maxChars?: number;
+  required?: boolean;
 }

@@ -4,84 +4,89 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { ROUTES } from "@/utils/constants";
-import { JobPost } from "@/utils/types";
-import { ExternalLink, Loader } from "lucide-react";
+import { DBUser, JobPost } from "@/utils/types";
+import { Loader } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageInfo from "../components/page-info";
+import { createClient } from "@/utils/supabase/client";
+import cookie from "js-cookie";
+import JobPostCard from "@/components/job-post-card";
 
 export default function Page() {
-   const [jobPosts, setJobPosts] = useState<JobPost[] | null>(null);
+  const [jobPosts, setJobPosts] = useState<JobPost[] | null>(null);
 
-   /** fetch user's job posts from the `/api/job-posts` endpoint */
-   async function fetchJobPosts() {
-      const response = await fetch("/api/job-posts");
-      const body: { message: string; data: JobPost[] } = await response.json();
+  async function fetchJobPosts() {
+    const userCookie = cookie.get("db_user");
 
-      if (response.status !== 200) {
-         setJobPosts([]);
-         return toast({ description: body.message });
-      }
+    if (!userCookie) {
+      return toast({
+        description: "please login again",
+      });
+    }
 
-      setJobPosts(body.data);
-   }
+    const parsedUserCookie: DBUser = JSON.parse(userCookie);
 
-   useEffect(() => {
-      fetchJobPosts();
-   }, []);
+    const supabase = createClient();
 
-   return (
-      <div className="space-y-5">
-         <PageInfo
-            title="Your job postings"
-            actionButtons={
-               <Link href={ROUTES.jobs.new}>
-                  <Button>Create new job</Button>
-               </Link>
-            }
-         />
-         {jobPosts ? (
-            <>
-               {jobPosts.length < 1 && (
-                  <div className="flex items-center justify-center py-32">
-                     <p>You have no job posts</p>
-                  </div>
-               )}
-               <ul className="grid grid-cols-3 gap-5">
-                  {jobPosts.map((post, index) => (
-                     <li key={index} className="relative group">
-                        <Link
-                           href={`/${post.organization}`}
-                           target="_blank"
-                           className="hidden group-hover:block"
-                        >
-                           <Button
-                              size="icon"
-                              variant="secondary"
-                              className="shadow-lg bg-white border absolute -right-3 -top-3 rounded-full"
-                           >
-                              <ExternalLink size={18} />
-                           </Button>
-                        </Link>
-                        <Link href={ROUTES.jobs.index + "/" + post.id}>
-                           <Card className="p-5 space-y-2">
-                              <h3 className="font-semibold">{post.role}</h3>
-                              <p>{post.requirements.length}</p>
-                              <div className="flex items-center justify-between">
-                                 <p>{post.created_at}</p>
-                                 <p>1003 applicants</p>
-                              </div>
-                           </Card>
-                        </Link>
-                     </li>
-                  ))}
-               </ul>
-            </>
-         ) : (
+    let { data: job_posts, error } = await supabase
+      .from("job_posts")
+      .select(
+        `
+        role,
+        id,
+        description,
+        created_at,
+        updated_at,
+        organization,
+        organizations(name,domain)
+      `,
+      )
+      .eq("poster", parsedUserCookie.id);
+
+    if (error) {
+      return toast({
+        description: error.message,
+      });
+    }
+
+    setJobPosts(job_posts as any);
+  }
+
+  useEffect(() => {
+    fetchJobPosts();
+  }, []);
+
+  console.log(jobPosts);
+
+  return (
+    <div className="space-y-5">
+      <PageInfo
+        title="Your job postings"
+        actionButtons={
+          <Link href={ROUTES.jobs.new}>
+            <Button>Create new job</Button>
+          </Link>
+        }
+      />
+      {!jobPosts ? (
+        <div className="flex items-center justify-center py-32">
+          <Loader className="animate-spin" />
+        </div>
+      ) : (
+        <>
+          {jobPosts.length < 1 && (
             <div className="flex items-center justify-center py-32">
-               <Loader className="animate-spin" />
+              <p>You have no job posts</p>
             </div>
-         )}
-      </div>
-   );
+          )}
+          <ul className="grid grid-cols-3 gap-5">
+            {jobPosts.map((post) => (
+              <JobPostCard data={post} key={post.id} />
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
 }
