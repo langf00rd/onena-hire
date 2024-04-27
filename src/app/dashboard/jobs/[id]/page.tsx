@@ -24,6 +24,7 @@ import { LinkCopyButton } from "../../components/link-copy-button";
 import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
 import { ApplicantsTable } from "../../components/tables/applicants";
+import getJobPostLink from "@/utils/get-job-post-link";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
@@ -168,8 +169,4 @@ function getFormattedInputFieldValues(data: JobApplication[]) {
     jobApplications.push(obj);
   }
   return jobApplications;
-}
-
-function getJobPostLink(jobPostID: number | string, domain: string) {
-  return `/organization/${domain}/jobs/${jobPostID}`;
 }
