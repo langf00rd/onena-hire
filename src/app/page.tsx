@@ -1,21 +1,13 @@
 import { Button } from "@/components/ui/button";
 import WidthConstraint from "@/components/width-constraint";
-import Header from "./dashboard/components/header";
-import {
-  BarChart,
-  Building2,
-  Globe,
-  Grid,
-  Pencil,
-  Search,
-  Stars,
-  TextIcon,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
-import Link from "next/link";
 import { ROUTES } from "@/utils/constants";
+import { BarChart, Globe, Grid, Pencil, Search, Stars } from "lucide-react";
+import { headers } from "next/headers";
+import Link from "next/link";
 
 export default function Home() {
+  const headersList = headers();
+  const shareableJobPostLink = `https://${headersList.get("host")}/organization/onena-hire/`;
   return (
     <main>
       <WidthConstraint className="gap-5 flex flex-col items-center justify-center text-center h-[50vh] px-10 md:px-0">
@@ -29,12 +21,17 @@ export default function Home() {
           Track &amp; manage job applications, create career pages, and analyze
           job applicants to ensure you hire only the best people
         </p>
-        <Link href={ROUTES.auth.signIn}>
-          <Button>
-            <Stars size={15} />
-            Get started for free
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href={ROUTES.auth.signIn}>
+            <Button>
+              <Stars size={15} />
+              Get started for free
+            </Button>
+          </Link>
+          <Link target="_blank" href={shareableJobPostLink}>
+            <Button variant="secondary">View demo</Button>
+          </Link>
+        </div>
       </WidthConstraint>
       <div className="bg-zinc-50 md:h-[40vh] px-10 md:px-0 py-20 md:py-0">
         <div className="max-w-4xl mx-auto h-full flex items-center justify-center">
