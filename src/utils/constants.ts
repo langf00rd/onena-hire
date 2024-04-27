@@ -6,6 +6,9 @@ export const ROUTES = {
   welcome: {
     yourInfo: "/welcome/your-info",
   },
+  auth: {
+    signIn: "/auth/sign-in",
+  },
   jobs: {
     index: "/dashboard/jobs",
     new: "/dashboard/jobs/new",
