@@ -30,8 +30,8 @@ export const JOB_POST_SECTIONS = [
 export const NUMBER_OF_EMPLOYEES = ["1-20", "20-60", "60-100", "over 100"];
 
 export const INPUT_FIELD_TYPES = [
-  "multi-text",
   "text",
+  "multi-text",
   "file",
   "email",
   "url",
@@ -39,6 +39,6 @@ export const INPUT_FIELD_TYPES = [
   "time",
   "number",
   "datetime-local",
-  "single-select",
-  "multi-select",
+  // "single-select",
+  // "multi-select",
 ];

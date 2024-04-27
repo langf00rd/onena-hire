@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Aside() {
   return (
-    <aside className="h-full w-[500px] p-10 flex flex-col justify-between">
+    <aside className="h-full w-[350px] p-5 flex flex-col justify-between">
       <div className="space-y-10">
         <Link href="/dashboard/overview">
           <h1 className="text-3xl font-black">Onena Hire</h1>
@@ -35,11 +35,11 @@ export const ASIDE_ROUTES: {
   route: string;
   icon?: ReactNode;
 }[] = [
-  {
-    label: "Overview",
-    route: ROUTES.overview,
-    icon: <TrendingUp size={20} />,
-  },
+  // {
+  //   label: "Overview",
+  //   route: ROUTES.overview,
+  //   icon: <TrendingUp size={20} />,
+  // },
   {
     label: "Jobs",
     route: ROUTES.jobs.index,

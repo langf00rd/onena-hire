@@ -1,6 +1,6 @@
 "use client";
 
-import { RenderSelectedInputFieldComponents } from "@/app/dashboard/jobs/new/components/application-form";
+import { RenderSelectedInputFieldComponents } from "@/app/dashboard/jobs/new/components/application-form-builder";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
@@ -60,7 +60,7 @@ export default function ApplicationForm(props: {
   }
 
   return (
-    <form onSubmit={handleApply}>
+    <form onSubmit={handleApply} className="max-w-md">
       <RenderSelectedInputFieldComponents components={props.inputFields} />
       <Button>Apply</Button>
     </form>

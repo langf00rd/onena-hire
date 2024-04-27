@@ -16,7 +16,7 @@ export default function RootLayout({
     <div className="h-screen flex">
       <Toaster />
       <Aside />
-      <div className="w-full p-10 overflow-y-scroll">{children}</div>
+      <div className="w-full p-5 overflow-y-scroll">{children}</div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ import { InputFieldComponentProps } from "@/utils/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-export default function ApplicationForm(props: {
+export default function ApplicationFormBuilder(props: {
   onSubmit: (inputFields: InputFieldComponentProps[]) => void;
 }) {
   const [inputFields, setInputFields] = useState<InputFieldComponentProps[]>(
@@ -28,17 +28,19 @@ export default function ApplicationForm(props: {
   }
 
   return (
-    <div className="flex items-start gap-5">
-      <div className="flex-1">
-        <RenderSelectedInputFieldComponents components={inputFields} />
-      </div>
-      <div className="flex-1 sticky top-[100px]">
-        <InputFieldComponent onAddComponent={handleAddComponent} />
+    <>
+      <div className="flex items-start gap-5">
+        <div className="flex-[1] bg-zinc-50 rounded-md h-full p-5">
+          <RenderSelectedInputFieldComponents components={inputFields} />
+        </div>
+        <div className="flex-1 sticky top-[100px]">
+          <InputFieldComponent onAddComponent={handleAddComponent} />
+        </div>
       </div>
       <Button onClick={() => props.onSubmit(inputFields)}>
         Create job post
       </Button>
-    </div>
+    </>
   );
 }
 

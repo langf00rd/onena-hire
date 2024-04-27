@@ -1,13 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -15,6 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import getJobPostLink from "@/utils/get-job-post-link";
 import { createClient } from "@/utils/supabase/server";
 import { JobApplication, JobPost, PageProps } from "@/utils/types";
 import { ExternalLink, Share2 } from "lucide-react";
@@ -24,7 +16,7 @@ import { LinkCopyButton } from "../../components/link-copy-button";
 import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
 import { ApplicantsTable } from "../../components/tables/applicants";
-import getJobPostLink from "@/utils/get-job-post-link";
+import DeleteJobPostDialog from "../new/components/delete-job-post-dialog";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
@@ -49,12 +41,14 @@ export default async function Page(props: PageProps) {
     )
     .eq("id", props.params.id);
 
+  if (error) return <p>{error.message}</p>;
+
+  if (data.length < 1) return <p>Job post not found</p>;
+
   let { data: applications, error: applicationsError } = await supabase
     .from("applications")
     .select()
     .eq("job_post", props.params.id);
-
-  if (error) return <p>{error.message}</p>;
 
   if (applicationsError) return <p>{applicationsError.message}</p>;
 
@@ -134,24 +128,7 @@ export default async function Page(props: PageProps) {
                   related data from our servers, including applications
                 </p>
               </div>
-              <Dialog>
-                <DialogTrigger>
-                  <Button variant="destructive">Delete</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your job post and remove all related data from our
-                      servers, including applications
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button variant="destructive">Yes, delete</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <DeleteJobPostDialog jobPostID={jobPostData.id} />
             </div>
           </div>
         </TabsContent>

@@ -65,7 +65,7 @@ const Support = () => {
 
   return (
     <Card className="p-5 space-y-5 shadow-md">
-      <p>Got feedback or need support?</p>
+      <p>Got Feedback or need support?</p>
       <Dialog>
         <DialogTrigger asChild>
           <Button className="w-full">Send us a message</Button>
