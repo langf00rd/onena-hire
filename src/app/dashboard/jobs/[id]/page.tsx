@@ -17,21 +17,17 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/utils/supabase/server";
 import { JobApplication, JobPost, PageProps } from "@/utils/types";
-import { CopyIcon } from "@radix-ui/react-icons";
-import {
-  ExternalLink,
-  Facebook,
-  Linkedin,
-  Share2,
-  Twitter,
-} from "lucide-react";
+import { ExternalLink, Share2 } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { LinkCopyButton } from "../../components/link-copy-button";
 import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
 import { ApplicantsTable } from "../../components/tables/applicants";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
+  const headersList = headers();
 
   const { data, error } = await supabase
     .from("job_posts")
@@ -63,6 +59,11 @@ export default async function Page(props: PageProps) {
 
   const jobPostData: JobPost = data[0] as unknown as JobPost;
 
+  const shareableJobPostLink = `https://${headersList.get("host")}${getJobPostLink(
+    jobPostData.id,
+    jobPostData.organizations.domain,
+  )}`;
+
   return (
     <>
       <PageInfo
@@ -93,17 +94,15 @@ export default async function Page(props: PageProps) {
               </PopoverTrigger>
               <PopoverContent className="space-y-5">
                 <div className="flex gap-2">
-                  <Input value="https://acme.onenahire.com" />
-                  <Button size="icon" variant="ghost">
-                    <CopyIcon />
-                  </Button>
+                  <Input value={shareableJobPostLink} />
+                  <LinkCopyButton link={shareableJobPostLink} />
                 </div>
-                <hr />
+                {/* <hr />
                 <div className="flex items-center justify-evenly">
                   <Twitter />
                   <Linkedin />
                   <Facebook />
-                </div>
+                </div> */}
               </PopoverContent>
             </Popover>
           </div>
