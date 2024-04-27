@@ -8,6 +8,8 @@ export const ROUTES = {
   },
   auth: {
     signIn: "/auth/sign-in",
+    signUp: "/auth/sign-up",
+    forgotPassword: "/auth/password-reset",
   },
   jobs: {
     index: "/dashboard/jobs",

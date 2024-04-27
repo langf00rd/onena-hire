@@ -8,11 +8,13 @@ import { ROUTES } from "@/utils/constants";
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
+      <Toaster />
       <div className="hidden md:block">
         <Header />
       </div>
-      <Toaster />
-      <div className="hidden md:block">{children}</div>
+      <div className="hidden md:block">
+        <div className="max-w-md mx-auto py-32 space-y-5">{children}</div>
+      </div>
       <div className="space-y-5 md:hidden px-10 py-32">
         <h1 className="text-2xl">Support for mobile devices coming soon</h1>
         <p>Please use on a larger device</p>
