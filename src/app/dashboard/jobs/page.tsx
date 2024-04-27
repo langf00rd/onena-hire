@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { ROUTES } from "@/utils/constants";
 import { DBUser, JobPost } from "@/utils/types";
