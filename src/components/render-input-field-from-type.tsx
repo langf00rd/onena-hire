@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,9 +7,16 @@ export default function RenderInputFieldFromType(
   props: InputFieldComponentProps,
 ) {
   if (
-    ["text", "file", "email", "url", "tel", "time", "number"].includes(
-      props.type,
-    )
+    [
+      "text",
+      "file",
+      "email",
+      "url",
+      "tel",
+      "time",
+      "number",
+      "datetime-local",
+    ].includes(props.type)
   ) {
     return (
       <fieldset>

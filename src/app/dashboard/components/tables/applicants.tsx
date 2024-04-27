@@ -53,13 +53,13 @@ function generateColumns(schema: JobPost["input_fields"]) {
           return (
             <Link
               target="_blank"
-              className="underline text-blue-600"
+              className="underline whitespace-nowrap text-blue-600"
               href={value}
             >
               {value}
             </Link>
           );
-        } else return <div>{value}</div>;
+        } else return <div className="whitespace-nowrap">{value}</div>;
       },
     });
   }
@@ -157,7 +157,7 @@ export function ApplicantsTable(props: {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="whitespace-nowrap">
                       {header.isPlaceholder
                         ? null
                         : flexRender(

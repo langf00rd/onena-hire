@@ -23,10 +23,10 @@ import {
   InputFieldComponentProps,
   JobPost,
 } from "@/utils/types";
-import { Copy, FileDown, Stars } from "lucide-react";
+import { ArrowLeft, Copy, FileDown, Stars } from "lucide-react";
 import { useState } from "react";
 import PageInfo from "../../components/page-info";
-import ApplicationForm from "./components/application-form";
+import ApplicationFormBuilder from "./components/application-form-builder";
 import JobPostForm from "./components/job-post-form";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "@/components/ui/use-toast";
@@ -62,19 +62,22 @@ export default function Page() {
       />
       <br />
       {showJobPostForm ? (
-        <>
-          <ApplicationForm onSubmit={handleCreateJobPost} />
+        <div className="space-y-5 max-w-[800px] mx-auto">
+          <ApplicationFormBuilder onSubmit={handleCreateJobPost} />
           <div className="flex gap-3">
             <Button
               variant="secondary"
               onClick={() => setShowJobPostForm(false)}
             >
+              <ArrowLeft size={15} />
               Go back to job post form
             </Button>
           </div>
-        </>
+        </div>
       ) : (
-        <JobPostForm onContinue={onApplicationFormFilled} />
+        <div className="max-w-xl mx-auto">
+          <JobPostForm onContinue={onApplicationFormFilled} />
+        </div>
       )}
     </>
   );
