@@ -38,8 +38,6 @@ export default function Page() {
 
     const parsedUserCookie: DBUser = JSON.parse(userCookie);
 
-    console.log({ parsedUserCookie });
-
     const organizationQuery = await supabase
       .from("organizations")
       .insert([
@@ -51,8 +49,6 @@ export default function Page() {
         },
       ])
       .select();
-
-    console.log({ organizationQuery });
 
     if (organizationQuery.error) {
       return toast({
