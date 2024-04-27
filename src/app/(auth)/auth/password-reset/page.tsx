@@ -6,9 +6,17 @@ import { toast } from "@/components/ui/use-toast";
 import { ROUTES } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 
 export default function Page() {
+  return (
+    <Suspense fallback={<>...</>}>
+      <PageContent />
+    </Suspense>
+  );
+}
+
+function PageContent() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [isEnteringNewPassword, setIsEnteringNewPassword] = useState<
@@ -21,7 +29,7 @@ export default function Page() {
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get("email")!.toString();
 
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/password-reset`,
     });
 
