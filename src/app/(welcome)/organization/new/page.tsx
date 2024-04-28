@@ -13,7 +13,6 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { NUMBER_OF_EMPLOYEES, ROUTES } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import cookie from "js-cookie";
 import { DBUser } from "@/utils/types";
