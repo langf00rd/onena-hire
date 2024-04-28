@@ -1,19 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,41 +16,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
+import { extractEmailsFromApplicationInputValues } from "@/utils/extract-emails";
+import generateApplicationTableCols from "@/utils/generate-application-table-cols";
 import { JobApplication, JobPost } from "@/utils/types";
-import Link from "next/link";
-
-function generateColumns(schema: JobPost["input_fields"]) {
-  const columnDefs: ColumnDef<Record<string, unknown>>[] = [];
-  for (const field of schema) {
-    columnDefs.push({
-      accessorKey: field.label.toLowerCase().replaceAll(" ", "_"),
-      header: field.label,
-      cell: (cell) => {
-        const value = String(cell.getValue());
-        if (field.type === "url") {
-          return (
-            <Link
-              target="_blank"
-              className="underline whitespace-nowrap text-blue-600"
-              href={value}
-            >
-              {value}
-            </Link>
-          );
-        } else return <div className="whitespace-nowrap">{value}</div>;
-      },
-    });
-  }
-  return columnDefs;
-}
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import {
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Expand, Mail } from "lucide-react";
+import * as React from "react";
 
 export function ApplicantsTable(props: {
   data: JobApplication["input_values"];
@@ -80,7 +49,7 @@ export function ApplicantsTable(props: {
 
   const table = useReactTable({
     data: props.data,
-    columns: generateColumns(props.schema),
+    columns: generateApplicationTableCols(props.schema),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -97,6 +66,33 @@ export function ApplicantsTable(props: {
     },
   });
 
+  const emails = extractEmailsFromApplicationInputValues(props.data);
+
+  const [isExportingEmails, startEmailExport] = React.useTransition();
+
+  function exportStringsAsTxt(strings: string[], filename: string) {
+    startEmailExport(() => {
+      try {
+        const blob = new Blob([strings.join("\n")], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${filename}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Revoke the URL to free up resources
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        toast({
+          description: String(err),
+        });
+      }
+    });
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center gap-5 py-4">
@@ -108,23 +104,18 @@ export function ApplicantsTable(props: {
           }
           className="max-w-sm"
         />
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Apply filters</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-        <Button variant="outline">Export selected</Button>
+        <Button
+          isLoading={isExportingEmails}
+          variant="secondary"
+          onClick={() =>
+            exportStringsAsTxt(emails, `application-emails-${Date.now()}`)
+          }
+        >
+          <Mail size={15} />
+          Export all {emails.length} emails
+        </Button>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" className="ml-auto">
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
@@ -190,7 +181,7 @@ export function ApplicantsTable(props: {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={generateColumns(props.schema).length}
+                  colSpan={generateApplicationTableCols(props.schema).length}
                   className="h-24 text-center"
                 >
                   No results.

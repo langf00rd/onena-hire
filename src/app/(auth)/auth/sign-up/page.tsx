@@ -8,8 +8,7 @@ import PasswordInput from "@/components/ui/password-input";
 import { toast } from "@/components/ui/use-toast";
 import { ROUTES } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/client";
-import { LoaderCircle } from "lucide-react";
-import { ChangeEvent, FormEvent, useState, useTransition } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import cookie from "js-cookie";
 import Link from "next/link";
 
@@ -27,7 +26,6 @@ export default function Page() {
     unmatchedPassword: "",
   });
   const { email, password, confirmPassword } = formData;
-  const [isPending, startTransition] = useTransition();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -163,7 +161,7 @@ export default function Page() {
           )}
         </fieldset>
         <Button type="submit" className="bg-black w-full text-white">
-          {isPending ? <LoaderCircle className="animate-spin" /> : "Sign up"}
+          Sign up
         </Button>
       </form>
       <p>
