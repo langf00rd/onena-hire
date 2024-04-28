@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ROUTES } from "@/utils/constants";
@@ -35,9 +37,14 @@ export default function JobPostCard(props: {
             : ROUTES.jobs.index + "/" + props.data.id
         }
       >
-        <Card className="p-5 space-y-2">
+        <Card className="p-5 space-y-2 capitalize">
           <h3 className="font-semibold">{props.data.role}</h3>
-          <p>{timestampzToReadable(props.data.created_at)}</p>
+          <div className="flex flex-col md:flex-row space-y-2 justify-between">
+            <p>{timestampzToReadable(props.data.created_at)}</p>
+            <p>
+              {props.data.location_type} {props.data.location}
+            </p>
+          </div>
         </Card>
       </Link>
     </div>

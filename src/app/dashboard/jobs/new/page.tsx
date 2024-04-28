@@ -44,6 +44,8 @@ export default function Page() {
     const supabase = createClient();
     const queryPayload = { ...formData, input_fields: inputFields };
 
+    console.log("creating ", formData);
+
     const { error } = await supabase.from("job_posts").insert([queryPayload]);
 
     if (error) {
