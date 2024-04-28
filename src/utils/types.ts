@@ -38,6 +38,8 @@ export interface JobPost {
   organization: number;
   organizations: { name: string; domain: string };
   input_fields: InputFieldComponentProps[];
+  location_type: string;
+  location?: string;
   [key: string]: unknown;
 }
 

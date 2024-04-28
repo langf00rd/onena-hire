@@ -42,3 +42,5 @@ export const INPUT_FIELD_TYPES = [
   // "single-select",
   // "multi-select",
 ];
+
+export const JOB_LOCATION_TYPE = ["remote", "on-site", "hybrid"];

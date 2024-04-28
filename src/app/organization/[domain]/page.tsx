@@ -1,6 +1,6 @@
-import JobPostCard from "@/components/job-post-card";
 import { createClient } from "@/utils/supabase/server";
-import { JobPost, Organization, PageProps } from "@/utils/types";
+import { Organization, PageProps } from "@/utils/types";
+import JobPostGrid from "../components/job-posts-grid";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
@@ -32,20 +32,18 @@ export default async function Page(props: PageProps) {
             {organization[0].name}
           </h1>
         )}
+
         {jobPosts && jobPosts.length < 1 && <p>No open roles</p>}
+
         {!jobPosts ? (
           <></>
         ) : (
-          <ul className="grid md:grid-cols-2 gap-5">
-            {(jobPosts as unknown as JobPost[]).map((post) => (
-              <JobPostCard
-                domain={props.params.domain as string}
-                isPublic
-                data={post}
-                key={post.id}
-              />
-            ))}
-          </ul>
+          <>
+            <JobPostGrid
+              domain={String(props.params.domain)}
+              jobPosts={jobPosts}
+            />
+          </>
         )}
       </div>
     </>

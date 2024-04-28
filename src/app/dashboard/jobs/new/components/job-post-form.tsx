@@ -5,8 +5,16 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Check, Loader, Plus, X } from "lucide-react";
 import { FormEvent, useState } from "react";
-import { ApplicationJobPost, DBUser, JobPost } from "@/utils/types";
+import { ApplicationJobPost, DBUser } from "@/utils/types";
 import cookie from "js-cookie";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { JOB_LOCATION_TYPE } from "@/utils/constants";
 
 export default function JobPostForm(props: {
   onContinue: (formData: ApplicationJobPost) => void;
@@ -44,6 +52,8 @@ export default function JobPostForm(props: {
     const formData = new FormData(e.target as HTMLFormElement);
     const role = formData.get("role")?.toString();
     const description = formData.get("description")?.toString();
+    const location = formData.get("location")?.toString();
+    const locationType = formData.get("location-type")?.toString();
 
     const userCookie = cookie.get("db_user");
 
@@ -58,7 +68,9 @@ export default function JobPostForm(props: {
     props.onContinue({
       role: role!,
       description: description!,
+      location_type: locationType,
       responsibilities,
+      location,
       requirements,
       organization: Number(parsedUserCookie.organization),
       poster: Number(parsedUserCookie.id),
@@ -71,13 +83,14 @@ export default function JobPostForm(props: {
         <Label htmlFor="role" className="text-black">
           Job title
         </Label>
-        <Input name="role" placeholder="Software Engineer" />
+        <Input required name="role" placeholder="Software Engineer" />
       </fieldset>
       <fieldset>
         <Label htmlFor="description" className="text-black">
           Description
         </Label>
         <Textarea
+          required
           name="description"
           placeholder="Share some info about your company (eg, values, mission & vision, etc) and info about this role"
         />
@@ -149,7 +162,35 @@ export default function JobPostForm(props: {
           </Button>
         </div>
       </fieldset>
-      <fieldset>
+      <div className="flex">
+        <fieldset>
+          <Label className="text-black">Location type</Label>
+          <Select required name="location-type">
+            <SelectTrigger className="w-[180px] capitalize">
+              <SelectValue placeholder={JOB_LOCATION_TYPE[0]} />
+            </SelectTrigger>
+            <SelectContent>
+              {JOB_LOCATION_TYPE.map((locationType) => (
+                <SelectItem
+                  key={locationType}
+                  value={locationType}
+                  className="capitalize"
+                >
+                  {locationType}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </fieldset>
+        <fieldset>
+          <Label className="text-black">Location</Label>
+          <Input
+            name="location"
+            placeholder="Leave blank if no location restrictions"
+          />
+        </fieldset>
+      </div>
+      {/* <fieldset>
         <Label htmlFor="more" className="text-black">
           Please enter any extra information you want to show on the job post
         </Label>
@@ -157,10 +198,8 @@ export default function JobPostForm(props: {
           name="more"
           placeholder="Talk about any other thing, eg. salary, interview stages, etc"
         />
-      </fieldset>
-      <Button>
-        {isLoading ? <Loader className="animate-spin" /> : "Continue"}
-      </Button>
+      </fieldset> */}
+      <Button>Continue</Button>
     </form>
   );
 }
