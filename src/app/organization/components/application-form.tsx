@@ -23,6 +23,7 @@ export default function ApplicationForm(props: {
 
       formData.set("file", pair[1]);
       formData.set("file-key", fileKey);
+      formData.set("file-type", (pair[1] as File).type);
 
       try {
         const response = await fetch("/api/upload-file", {

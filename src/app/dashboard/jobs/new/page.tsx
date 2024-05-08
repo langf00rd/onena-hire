@@ -18,11 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { JOB_POST_SECTIONS } from "@/utils/constants";
-import {
-  ApplicationJobPost,
-  InputFieldComponentProps,
-  JobPost,
-} from "@/utils/types";
+import { ApplicationJobPost, InputFieldComponentProps } from "@/utils/types";
 import { ArrowLeft, Copy, FileDown, Stars } from "lucide-react";
 import { useState } from "react";
 import PageInfo from "../../components/page-info";
@@ -43,8 +39,6 @@ export default function Page() {
   async function handleCreateJobPost(inputFields: InputFieldComponentProps[]) {
     const supabase = createClient();
     const queryPayload = { ...formData, input_fields: inputFields };
-
-    console.log("creating ", formData);
 
     const { error } = await supabase.from("job_posts").insert([queryPayload]);
 

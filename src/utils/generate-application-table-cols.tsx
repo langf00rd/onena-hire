@@ -2,12 +2,30 @@ import { ColumnDef } from "@tanstack/react-table";
 import { InputFieldComponentProps, JobPost } from "./types";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 function RenderTableCell(props: {
   value: string;
   field: InputFieldComponentProps;
 }) {
-  if (props.field.type === "url" || props.field.type === "file") {
+  if (props.field.type === "file") {
+    return (
+      <Dialog>
+        <DialogTrigger className="flex items-center gap-1 underline hover:no-underline whitespace-nowrap text-blue">
+          <ExternalLink size={13} />
+          <p>View file</p>
+        </DialogTrigger>
+        <DialogContent className="w-[900px] h-[800px]">
+          <iframe
+            width={800}
+            height={700}
+            className="bg-zinc-50"
+            src={props.value}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  } else if (props.field.type === "url") {
     return (
       <Link
         target="_blank"
@@ -15,9 +33,7 @@ function RenderTableCell(props: {
         href={props.value}
       >
         <ExternalLink size={13} />
-        {props.value.toString() === "undefined"
-          ? props.value
-          : new URL(props.value).host}
+        {props.value}
       </Link>
     );
   } else

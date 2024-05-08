@@ -43,6 +43,22 @@ export const INPUT_FIELD_TYPES = [
   // "multi-select",
 ];
 
+export const FILE_TYPES = [
+  { label: "PDF", value: "application/pdf" },
+  {
+    label: "Video (MP4)",
+    value: "video/mp4",
+  },
+  {
+    label: "Image (PNG)",
+    value: "image/png",
+  },
+  {
+    label: "Image (JPG)",
+    value: "image/jpg",
+  },
+];
+
 export const JOB_LOCATION_TYPE = ["remote", "on-site", "hybrid"];
 
 export enum CookieKeys {

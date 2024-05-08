@@ -27,6 +27,7 @@ export default function RenderInputFieldFromType(
           type={props.type}
           name={props.id}
           required={props.required}
+          accept={props.file_field_type ?? "*"}
           className="w-full"
         />
       </fieldset>
