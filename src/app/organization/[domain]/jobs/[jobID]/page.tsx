@@ -28,7 +28,7 @@ export default async function Page(props: PageProps) {
             title={jobPostData.role}
             actionButtons={
               <Link href="#apply">
-                <Button>Apply for this job</Button>
+                <Button>Apply for this role</Button>
               </Link>
             }
           />

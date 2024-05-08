@@ -44,3 +44,8 @@ export const INPUT_FIELD_TYPES = [
 ];
 
 export const JOB_LOCATION_TYPE = ["remote", "on-site", "hybrid"];
+
+export enum CookieKeys {
+  Organization = "db_organization",
+  User = "db_user",
+}

@@ -1,6 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { Organization, PageProps } from "@/utils/types";
 import JobPostGrid from "../components/job-posts-grid";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ROUTES } from "@/utils/constants";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
@@ -26,7 +29,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <>
-      <div className="max-w-5xl p-10 mx-auto space-y-10">
+      <div className="max-w-[500px] p-5 mx-auto space-y-10">
         {organization && organization[0] && (
           <h1 className="text-2xl md:text-3xl font-bold">
             {organization[0].name}
@@ -45,6 +48,11 @@ export default async function Page(props: PageProps) {
             />
           </>
         )}
+      </div>
+      <div className="flex items-center justify-center">
+        <Link href={ROUTES.index}>
+          <Button variant="outline">Built with Onena Hire</Button>
+        </Link>
       </div>
     </>
   );
