@@ -141,6 +141,7 @@ export interface InputFieldComponentProps {
   label: string;
   maxChars?: number;
   required?: boolean;
+  file_field_type?: string;
 }
 
 export interface Organization {
