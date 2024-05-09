@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PasswordInput from "@/components/ui/password-input";
 import { toast } from "@/components/ui/use-toast";
-import { ROUTES } from "@/utils/constants";
+import { CookieKeys, ROUTES } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/client";
 import cookie from "js-cookie";
 import Link from "next/link";
+import { DBUser } from "@/utils/types";
 
 export default function Page() {
   const handleFormSubmit = async (e: FormEvent) => {
@@ -43,7 +44,19 @@ export default function Page() {
       });
     }
 
-    cookie.set("db_user", JSON.stringify(users[0]));
+    let { data: organizations, error: organizationsError } = await supabase
+      .from("organizations")
+      .select()
+      .eq("id", (users[0] as DBUser).organization);
+
+    if (organizationsError || !organizations) {
+      return toast({
+        description: organizationsError?.message,
+      });
+    }
+
+    cookie.set(CookieKeys.Organization, JSON.stringify(organizations[0]));
+    cookie.set(CookieKeys.User, JSON.stringify(users[0]));
 
     window.location.href = ROUTES.overview;
   };

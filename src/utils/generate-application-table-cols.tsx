@@ -1,11 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { JobPost } from "./types";
+import { InputFieldComponentProps, JobPost } from "./types";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
 /**
  * dynamically generates the table heads (columns) for the table
  * @param schema - the input fields schema from the job post which serves as the main layout for the table
  */
+
 export default function generateApplicationTableHeadCols(
   schema: JobPost["input_fields"],
 ) {
@@ -15,27 +18,53 @@ export default function generateApplicationTableHeadCols(
       accessorKey: field.label.toLowerCase().replaceAll(" ", "_"),
       header: field.label,
       cell: (cell) => {
-        const value =
-          typeof cell.getValue() !== "string" ? "--" : String(cell.getValue());
-        if (field.type === "url") {
-          return (
-            <Link
-              target="_blank"
-              className="underline hover:no-underline flex items-center gap-1 whitespace-nowrap text-blue-600"
-              href={value}
-            >
-              <ExternalLink size={13} />
-              {value}
-            </Link>
-          );
-        } else
-          return (
-            <div className="whitespace-nowrap">
-              {Number(value) ? Number(value).toLocaleString() : value}
-            </div>
-          );
+        return (
+          <RenderTableCell value={String(cell.getValue())} field={field} />
+        );
       },
     });
   }
   return columnDefs;
+}
+
+function RenderTableCell(props: {
+  value: string;
+  field: InputFieldComponentProps;
+}) {
+  if (props.field.type === "file") {
+    return (
+      <Dialog>
+        <DialogTrigger className="flex items-center gap-1 underline hover:no-underline whitespace-nowrap text-blue">
+          <ExternalLink size={13} />
+          <p>View file</p>
+        </DialogTrigger>
+        <DialogContent className="h-[800px]">
+          <iframe
+            width={800}
+            height={700}
+            className="bg-zinc-50"
+            src={props.value}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  } else if (props.field.type === "url") {
+    return (
+      <Link
+        target="_blank"
+        className="underline hover:no-underline flex items-center gap-1 whitespace-nowrap text-blue-600"
+        href={props.value}
+      >
+        <ExternalLink size={13} />
+        {props.value}
+      </Link>
+    );
+  } else
+    return (
+      <p className="max-w-xl line-clamp-1">
+        {props.field.type === "number"
+          ? Number(props.value).toLocaleString()
+          : props.value}
+      </p>
+    );
 }

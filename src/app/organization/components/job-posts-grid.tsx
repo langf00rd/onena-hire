@@ -15,6 +15,9 @@ export default function JobPostGrid(props: {
     null,
   );
 
+  const jobsToShow =
+    filteredJobPosts ?? (props.jobPosts as unknown as JobPost[]);
+
   useEffect(() => {
     const searchResults = props.jobPosts.filter((a: JobPost) =>
       a.role.toLowerCase().includes(query),
@@ -24,7 +27,7 @@ export default function JobPostGrid(props: {
 
   return (
     <>
-      <div className="flex items-center gap-5 bg-zinc-50 max-w-md pr-5 p-2 rounded-md">
+      <div className="flex items-center gap-5 bg-zinc-50 pr-5 p-2 rounded-md">
         <Input
           onChange={(e) => setQuery(e.target.value)}
           className="border-0 text-md outline-none ring-0 bg-transparent"
@@ -32,17 +35,18 @@ export default function JobPostGrid(props: {
         />
         <Search size={20} />
       </div>
-      <ul className="grid md:grid-cols-2 gap-5">
-        {(filteredJobPosts ?? (props.jobPosts as unknown as JobPost[])).map(
-          (post) => (
-            <JobPostCard
-              domain={props.domain as string}
-              isPublic
-              data={post}
-              key={post.id}
-            />
-          ),
-        )}
+      {jobsToShow.length < 1 && (
+        <p className="text-center">No roles found for {query}</p>
+      )}
+      <ul className="grid gap-5">
+        {jobsToShow.map((post) => (
+          <JobPostCard
+            domain={props.domain as string}
+            isPublic
+            data={post}
+            key={post.id}
+          />
+        ))}
       </ul>
     </>
   );

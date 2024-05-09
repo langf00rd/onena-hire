@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { INPUT_FIELD_TYPES } from "@/utils/constants";
+import { FILE_TYPES, INPUT_FIELD_TYPES } from "@/utils/constants";
 import { InputFieldComponentProps } from "@/utils/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -61,7 +61,9 @@ function InputFieldComponent(props: {
 }) {
   const [labelValue, setLabelValue] = useState("");
   const [fieldType, setFieldType] = useState(INPUT_FIELD_TYPES[0]);
+  const [fileFieldType, setFileFieldType] = useState(FILE_TYPES[0].value);
   const [isRequired, setIsRequired] = useState(false);
+
   return (
     <Card className="p-3 space-y-5">
       <div className="flex items-center justify-between">
@@ -76,6 +78,7 @@ function InputFieldComponent(props: {
               type: fieldType,
               label: labelValue,
               required: isRequired,
+              file_field_type: fieldType === "file" ? fileFieldType : undefined,
             });
           }}
         >
@@ -97,6 +100,23 @@ function InputFieldComponent(props: {
           </SelectContent>
         </Select>
       </div>
+      {fieldType === "file" && (
+        <div className="space-y-2">
+          <p>Choose file type</p>
+          <Select onValueChange={(e) => setFileFieldType(e)}>
+            <SelectTrigger>
+              <SelectValue placeholder={FILE_TYPES[0].label} />
+            </SelectTrigger>
+            <SelectContent>
+              {FILE_TYPES.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div className="space-y-2">
         <p>Label</p>
         <Input
