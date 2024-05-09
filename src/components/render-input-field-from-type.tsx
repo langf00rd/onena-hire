@@ -27,6 +27,7 @@ export default function RenderInputFieldFromType(
           type={props.type}
           name={props.id}
           required={props.required}
+          accept={props.file_field_type ?? undefined}
           className="w-full"
         />
       </fieldset>
@@ -37,7 +38,7 @@ export default function RenderInputFieldFromType(
         <Label>
           {props.label} {props.required && "*"}
         </Label>
-        <Textarea className="w-full" />
+        <Textarea className="w-full" name={props.id} />
       </fieldset>
     );
   } else return <></>;

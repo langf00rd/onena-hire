@@ -3,8 +3,7 @@ import Aside from "./components/aside";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "app",
-  description: "dashboard",
+  title: "Onena Hire | Dashboard",
 };
 
 export default function RootLayout({

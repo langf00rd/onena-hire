@@ -18,11 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { JOB_POST_SECTIONS } from "@/utils/constants";
-import {
-  ApplicationJobPost,
-  InputFieldComponentProps,
-  JobPost,
-} from "@/utils/types";
+import { ApplicationJobPost, InputFieldComponentProps } from "@/utils/types";
 import { ArrowLeft, Copy, FileDown, Stars } from "lucide-react";
 import { useState } from "react";
 import PageInfo from "../../components/page-info";

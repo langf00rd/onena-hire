@@ -32,7 +32,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Expand, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import * as React from "react";
 
 export function ApplicantsTable(props: {
@@ -46,6 +46,8 @@ export function ApplicantsTable(props: {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  console.log(props.data);
 
   const table = useReactTable({
     data: props.data,

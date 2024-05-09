@@ -1,3 +1,5 @@
+import { FILE_TYPES, INPUT_FIELD_TYPES } from "@/utils/constants";
+
 export interface Application {
   [key: string]: unknown;
   id: string;
@@ -22,8 +24,10 @@ export interface JobApplication {
 }
 
 export interface PageProps {
+  // params: Record<string, unknown>;
+  // searchParams: Record<string, unknown>;
   params: Record<string, unknown>;
-  searchParams: Record<string, unknown>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export interface JobPost {
@@ -75,6 +79,7 @@ export interface InputFieldComponentProps {
   label: string;
   maxChars?: number;
   required?: boolean;
+  file_field_type?: string;
 }
 
 export interface Organization {
