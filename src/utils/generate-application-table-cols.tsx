@@ -4,6 +4,29 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
+/**
+ * dynamically generates the table heads (columns) for the table
+ * @param schema - the input fields schema from the job post which serves as the main layout for the table
+ */
+
+export default function generateApplicationTableHeadCols(
+  schema: JobPost["input_fields"],
+) {
+  const columnDefs: ColumnDef<Record<string, unknown>>[] = [];
+  for (const field of schema) {
+    columnDefs.push({
+      accessorKey: field.label.toLowerCase().replaceAll(" ", "_"),
+      header: field.label,
+      cell: (cell) => {
+        return (
+          <RenderTableCell value={String(cell.getValue())} field={field} />
+        );
+      },
+    });
+  }
+  return columnDefs;
+}
+
 function RenderTableCell(props: {
   value: string;
   field: InputFieldComponentProps;
@@ -15,7 +38,7 @@ function RenderTableCell(props: {
           <ExternalLink size={13} />
           <p>View file</p>
         </DialogTrigger>
-        <DialogContent className="w-[900px] h-[800px]">
+        <DialogContent className="h-[800px]">
           <iframe
             width={800}
             height={700}
@@ -38,33 +61,10 @@ function RenderTableCell(props: {
     );
   } else
     return (
-      <div className="whitespace-nowrap">
-        {Number(props.value)
+      <p className="max-w-xl line-clamp-1">
+        {props.field.type === "number"
           ? Number(props.value).toLocaleString()
           : props.value}
-      </div>
+      </p>
     );
-}
-
-/**
- * dynamically generates the table heads (columns) for the table
- * @param schema - the input fields schema from the job post which serves as the main layout for the table
- */
-
-export default function generateApplicationTableHeadCols(
-  schema: JobPost["input_fields"],
-) {
-  const columnDefs: ColumnDef<Record<string, unknown>>[] = [];
-  for (const field of schema) {
-    columnDefs.push({
-      accessorKey: field.label.toLowerCase().replaceAll(" ", "_"),
-      header: field.label,
-      cell: (cell) => {
-        return (
-          <RenderTableCell value={String(cell.getValue())} field={field} />
-        );
-      },
-    });
-  }
-  return columnDefs;
 }

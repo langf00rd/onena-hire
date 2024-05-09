@@ -6,7 +6,6 @@ export default async function uploadFileToS3(
   fileName: string,
   fileType: string,
 ) {
-  console.log(`uploading ${fileName} ${fileType}`);
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: `${fileName}`,

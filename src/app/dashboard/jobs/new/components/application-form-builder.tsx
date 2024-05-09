@@ -67,7 +67,7 @@ function InputFieldComponent(props: {
   return (
     <Card className="p-3 space-y-5">
       <div className="flex items-center justify-between">
-        <h3>Input field dsd</h3>
+        <h3>Input field</h3>
         <Button
           size="icon"
           variant="secondary"
@@ -78,7 +78,7 @@ function InputFieldComponent(props: {
               type: fieldType,
               label: labelValue,
               required: isRequired,
-              file_field_type: fileFieldType,
+              file_field_type: fieldType === "file" ? fileFieldType : undefined,
             });
           }}
         >

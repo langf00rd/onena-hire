@@ -6,7 +6,7 @@ import { toast } from "@/components/ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
 import { InputFieldComponentProps } from "@/utils/types";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import * as uuid from "short-uuid";
 
 export default function ApplicationForm(props: {
@@ -14,6 +14,7 @@ export default function ApplicationForm(props: {
   domain: string;
   jobPostID: string;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   async function parseFormDataEntry(pair: [][]) {
@@ -44,6 +45,8 @@ export default function ApplicationForm(props: {
 
   async function handleApply(e: FormEvent) {
     e.preventDefault();
+
+    setIsLoading(true);
 
     const inputValues = [];
     const formData = new FormData(e.target as HTMLFormElement);
@@ -79,7 +82,7 @@ export default function ApplicationForm(props: {
   return (
     <form onSubmit={handleApply} className="max-w-md">
       <RenderSelectedInputFieldComponents components={props.inputFields} />
-      <Button>Apply</Button>
+      <Button isLoading={isLoading}>Apply</Button>
     </form>
   );
 }
