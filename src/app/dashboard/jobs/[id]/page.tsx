@@ -17,6 +17,7 @@ import PageInfo from "../../components/page-info";
 import RenderOnClient from "../../components/render-on-client";
 import { ApplicantsTable } from "../../components/tables/applicants";
 import DeleteJobPostDialog from "../new/components/delete-job-post-dialog";
+import Head from "next/head";
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();

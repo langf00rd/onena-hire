@@ -24,8 +24,10 @@ export interface JobApplication {
 }
 
 export interface PageProps {
+  // params: Record<string, unknown>;
+  // searchParams: Record<string, unknown>;
   params: Record<string, unknown>;
-  searchParams: Record<string, unknown>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export interface JobPost {

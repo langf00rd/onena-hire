@@ -4,6 +4,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ROUTES } from "@/utils/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Onena Hire | Auth",
+};
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (

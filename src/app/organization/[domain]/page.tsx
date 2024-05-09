@@ -4,6 +4,13 @@ import JobPostGrid from "../components/job-posts-grid";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ROUTES } from "@/utils/constants";
+import { Metadata } from "next";
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  return {
+    title: (props.params.domain as string).replaceAll("-", " ").toUpperCase(),
+  };
+}
 
 export default async function Page(props: PageProps) {
   const supabase = createClient();
