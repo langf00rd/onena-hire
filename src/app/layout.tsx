@@ -7,7 +7,21 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Onena Hire",
-  description: "Hire the best, fast",
+  description: "Hire The Best, Fast",
+  openGraph: {
+    images:
+      "https://res.cloudinary.com/f00rd/image/upload/v1715580825/onenahire/bmjb6eqxknnwx4fza2uv.png",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@onenahq",
+    creator: "@onenahq",
+    images:
+      "https://res.cloudinary.com/f00rd/image/upload/v1715580825/onenahire/bmjb6eqxknnwx4fza2uv.png",
+  },
+  icons: {
+    icon: "favicon.ico",
+  },
 };
 
 export default function RootLayout({
