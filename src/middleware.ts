@@ -33,6 +33,6 @@ export const config = {
      * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!api|_next/static|_next/image|assets|auth/*|organization/*|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|assets|auth/*|subscribed|organization/*|favicon.ico).*)",
   ],
 };

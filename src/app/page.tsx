@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
         </div>
       </WidthConstraint>
-      <div className="bg-zinc-50 md:h-[40vh] px-10 md:px-0 py-20 md:py-0">
+      <div className="bg-zinc-50 py-20 px-10">
         <div className="max-w-4xl mx-auto h-full flex items-center justify-center">
           <ul className="grid md:grid-cols-3 gap-20 md:gap-10">
             {[
