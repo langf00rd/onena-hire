@@ -44,7 +44,7 @@ export default async function Home() {
               </Link>
             ) : (
               <Link href={ROUTES.auth.signUp}>
-                <Button>Use for free</Button>
+                <Button>Try for free</Button>
               </Link>
             )}
           </Link>
