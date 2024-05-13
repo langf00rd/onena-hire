@@ -1,5 +1,3 @@
-import { FILE_TYPES, INPUT_FIELD_TYPES } from "@/utils/constants";
-
 export interface Application {
   [key: string]: unknown;
   id: string;
