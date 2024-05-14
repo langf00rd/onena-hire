@@ -2,6 +2,7 @@ export const ROUTES = {
   index: "/",
   overview: "/dashboard/overview",
   settings: "/dashboard/settings",
+  upgrade: "/#upgrade",
   createOrganization: "/organization/new",
   welcome: {
     yourInfo: "/welcome/your-info",
@@ -65,3 +66,6 @@ export enum CookieKeys {
   Organization = "db_organization",
   User = "db_user",
 }
+
+export const FREE_JOB_POST_CREDITS = 3;
+export const MAX_FREE_APPLICATION_RECORDS = 5000;

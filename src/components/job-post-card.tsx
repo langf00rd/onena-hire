@@ -17,7 +17,7 @@ export default function JobPostCard(props: {
     <div className="relative group">
       {!props.isPublic && (
         <Link
-          href={`/organization/${props.data.organizations.domain}`}
+          href={`/organization/${props.data.organizations.domain}/jobs/${props.data.id}`}
           target="_blank"
           className="hidden group-hover:block"
         >

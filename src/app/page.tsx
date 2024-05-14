@@ -1,9 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import WidthConstraint from "@/components/width-constraint";
-import { ROUTES } from "@/utils/constants";
+import {
+  FREE_JOB_POST_CREDITS,
+  MAX_FREE_APPLICATION_RECORDS,
+  ROUTES,
+} from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
-import { BarChart, Globe, Grid, Pencil, Search, Stars } from "lucide-react";
+import { BarChart, Globe, Grid, Pencil, Search } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,8 +37,8 @@ export default async function Home() {
       <WidthConstraint className="gap-7 flex flex-col items-center justify-center text-center pt-32 px-10 md:px-0">
         <h1 className="text-3xl md:text-4xl">Hire The Best, Fast</h1>
         <p className="md:text-xl max-w-2xl">
-          Track &amp; manage job applications, create career pages, and analyze
-          job applicants to ensure you hire only the best people
+          Create career pages, track, manage &amp; analyze job applications to
+          ensure you hire only the best people
         </p>
         <div className="flex items-center gap-3">
           <Link href={ROUTES.auth.signIn}>
@@ -136,77 +140,63 @@ export default async function Home() {
           <CarouselNext />
         </Carousel>
       </div>
-      <div>
-        <div className="py-32 px-10 max-w-4xl mx-auto space-y-10">
-          <h1 className="text-center text-2xl">
-            Choose a plan that works for you
-          </h1>
-          <ul className="grid md:grid-cols-2 gap-10">
-            {[
-              {
-                name: "Free",
-                price: 0,
-                features: [
-                  "3 job posts",
-                  "10,000 application submissions",
-                  "24/7 support",
-                ],
-              },
-              {
-                name: "Lite",
-                top: true,
-                price: 10,
-                subscriptionPage: "https://paystack.com/pay/onena-lite-sub",
-                features: [
-                  "10 job posts",
-                  "50,000 application submissions",
-                  "Custom domain connection",
-                  "24/7 support",
-                  "More customizations",
-                ],
-              },
-              {
-                name: "Pro",
-                price: 30,
-                subscriptionPage: "https://paystack.com/pay/onena-pro-sub",
-                features: [
-                  "Unlimited job posts",
-                  "Unlimited application submissions",
-                  "Custom domain connection",
-                  "24/7 support",
-                  "More customizations",
-                ],
-              },
-            ].map((plan) => (
-              <li
-                className="border p-5 flex flex-col justify-between gap-10 rounded-xl"
-                key={plan.name}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-2xl flex gap-3 items-center">
-                    {plan.name}
-                    {plan.top && <Badge variant="outline">Best option</Badge>}
-                  </p>
-                  <h1 className="text-3xl">${plan.price}</h1>
-                </div>
-                <ul className="space-y-2">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
+      <div className="py-32 px-10 max-w-4xl mx-auto space-y-10" id="upgrade">
+        <h1 className="text-center text-2xl">
+          Choose a plan that works for you
+        </h1>
+        <ul className="grid md:grid-cols-2 gap-10">
+          {[
+            {
+              name: "Free",
+              price: 0,
+              features: [
+                `${FREE_JOB_POST_CREDITS} free job posts`,
+                `${MAX_FREE_APPLICATION_RECORDS} application submissions for each post`,
+                "24/7 support",
+              ],
+            },
+            {
+              name: "Pro",
+              top: true,
+              price: 10,
+              subscriptionPage: process.env.PAYSTACK_UPGRADE_URL,
+              features: [
+                "Unlimited job posts",
+                "Unlimited application submissions",
+                "Custom domain setup",
+                "More styling customizations",
+                "24/7 support",
+              ],
+            },
+          ].map(async (plan) => (
+            <li
+              className="border p-5 flex flex-col justify-between gap-10 rounded-xl"
+              key={plan.name}
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-2xl flex gap-3 items-center">
+                  {plan.name}
+                  {plan.top && <Badge variant="outline">Best option</Badge>}
+                </p>
+                <h1 className="text-3xl">${plan.price}</h1>
+              </div>
+              <ul className="space-y-2">
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+              {(await supabase.auth.getUser()).data.user && (
                 <Link
                   href={plan.subscriptionPage ?? "#"}
                   target="_blank"
                   className="w-full"
                 >
-                  <Button variant="outline" className="w-full">
-                    Choose this
-                  </Button>
+                  <Button className="w-full">Choose this</Button>
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="h-[10vh] bg-white text-center flex flex-col items-center justify-center">
         <p>All Rights Reserved. Onena HQ. &copy;{new Date().getFullYear()}</p>

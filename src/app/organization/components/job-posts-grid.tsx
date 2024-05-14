@@ -27,10 +27,10 @@ export default function JobPostGrid(props: {
 
   return (
     <>
-      <div className="flex items-center gap-5 bg-zinc-50 pr-5 p-2 rounded-md">
+      <div className="flex items-center gap-5 bg-zinc-50 pr-5 p-2 rounded-full">
         <Input
           onChange={(e) => setQuery(e.target.value)}
-          className="border-0 text-md outline-none ring-0 bg-transparent"
+          className="border-0 text-md outline-none rounded-full ring-0 bg-transparent"
           placeholder={`Search from ${props.jobPosts.length} open positions`}
         />
         <Search size={20} />

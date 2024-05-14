@@ -1,12 +1,26 @@
-import { Bolt, BriefcaseBusiness, TrendingUp } from "lucide-react";
+import {
+  Bolt,
+  BriefcaseBusiness,
+  Shield,
+  ShieldHalf,
+  Stars,
+  TrendingUp,
+} from "lucide-react";
 import AsideNavItem from "./aside-nav-item";
 import { ReactNode } from "react";
-import { ROUTES } from "@/utils/constants";
+import { CookieKeys, ROUTES } from "@/utils/constants";
 import Support from "./support";
 import UserProfile from "./user-profile";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import cookie from "js-cookie";
+import { DBUser } from "@/utils/types";
+import { cookies } from "next/headers";
+import { Badge } from "@/components/ui/badge";
 
 export default function Aside() {
+  const userCookie = cookies().get(CookieKeys.User);
+  const parsedUserCookie = JSON.parse(userCookie?.value ?? "{}") as DBUser;
   return (
     <aside className="h-full w-[350px] p-5 flex flex-col justify-between">
       <div className="space-y-10">
@@ -23,7 +37,24 @@ export default function Aside() {
           </ul>
           <hr />
         </div>
-        <UserProfile />
+        <div>
+          {parsedUserCookie.subscription_type !== "PAID" ? (
+            <Link href={ROUTES.upgrade}>
+              <Button className="w-full" variant="outline">
+                <Stars size={15} />
+                Upgrade your plan
+              </Button>
+            </Link>
+          ) : (
+            <Badge
+              className="bg-primary text-primary-foreground"
+              variant="outline"
+            >
+              Pro user
+            </Badge>
+          )}
+          <UserProfile />
+        </div>
       </div>
       <Support />
     </aside>

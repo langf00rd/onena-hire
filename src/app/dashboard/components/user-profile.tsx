@@ -48,7 +48,7 @@ export default function UserProfile() {
             </p>
           </div>
         </AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="space-y-5">
           <Button
             className="w-full"
             variant="destructive"
