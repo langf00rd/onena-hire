@@ -1,8 +1,9 @@
 import PageInfo from "@/app/dashboard/components/page-info";
 import ApplicationForm from "@/app/organization/components/application-form";
 import { Button } from "@/components/ui/button";
+import { MAX_FREE_APPLICATION_RECORDS } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
-import { JobPost, PageProps } from "@/utils/types";
+import { DBUser, JobPost, PageProps } from "@/utils/types";
 import { Check } from "lucide-react";
 import Link from "next/link";
 
@@ -13,12 +14,43 @@ export default async function Page(props: PageProps) {
 
   const { data, error } = await supabase
     .from("job_posts")
-    .select()
+    .select(
+      `
+      role,
+      description,
+      requirements,
+      input_fields,
+      poster(subscription_type)
+      `,
+    )
     .eq("id", props.params.jobID);
 
   if (error) return <p>{error.message}</p>;
 
   const jobPostData: JobPost = data[0] as unknown as JobPost;
+
+  if (!jobPostData) {
+    return (
+      <div className="w-screen text-center py-32">
+        <h1>This job post does not exist</h1>
+      </div>
+    );
+  }
+
+  const jobPoster = jobPostData.poster as unknown as DBUser;
+
+  let { data: applications, error: fetchApplicationsError } = await supabase
+    .from("applications")
+    .select()
+    .eq("id", Number(props.params.jobID));
+
+  if (fetchApplicationsError) {
+    return (
+      <div className="w-screen text-center py-32">
+        <h1>{fetchApplicationsError.message}</h1>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -27,9 +59,14 @@ export default async function Page(props: PageProps) {
           <PageInfo
             title={jobPostData.role}
             actionButtons={
-              <Link href="#apply">
-                <Button>Apply for this role</Button>
-              </Link>
+              <div className="flex gap-5">
+                <Link href="#apply">
+                  <Button>Apply for this role</Button>
+                </Link>
+                <Link href={`/organization/${props.params.domain}`}>
+                  <Button variant="secondary">Company home</Button>
+                </Link>
+              </div>
             }
           />
           <p>{jobPostData.description}</p>
@@ -58,11 +95,16 @@ export default async function Page(props: PageProps) {
         </div>
         <div id="apply">
           <h1 className="text-2xl mb-5">Apply for this role</h1>
-          <ApplicationForm
-            domain={domain}
-            jobPostID={jobID}
-            inputFields={jobPostData.input_fields}
-          />
+          {jobPoster.subscription_type === "FREE" &&
+          (applications ?? [])?.length >= MAX_FREE_APPLICATION_RECORDS ? (
+            <p>This job post is no longer accepting new applications</p>
+          ) : (
+            <ApplicationForm
+              domain={domain}
+              jobPostID={jobID}
+              inputFields={jobPostData.input_fields}
+            />
+          )}
         </div>
       </div>
     </>
