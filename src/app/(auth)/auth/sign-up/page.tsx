@@ -11,7 +11,6 @@ import { createClient } from "@/utils/supabase/client";
 import { ChangeEvent, FormEvent, useState } from "react";
 import cookie from "js-cookie";
 import Link from "next/link";
-import { DBUser } from "@/utils/types";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -69,18 +68,6 @@ export default function Page() {
       });
     }
 
-    let { data: organizations, error: organizationsError } = await supabase
-      .from("organizations")
-      .select()
-      .eq("id", (data[0] as DBUser).organization);
-
-    if (organizationsError || !organizations) {
-      return toast({
-        description: organizationsError?.message,
-      });
-    }
-
-    cookie.set(CookieKeys.Organization, JSON.stringify(organizations[0]));
     cookie.set(CookieKeys.User, JSON.stringify(data[0]));
 
     window.location.href = ROUTES.createOrganization;
