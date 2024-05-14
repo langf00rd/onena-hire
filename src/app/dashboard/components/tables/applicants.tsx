@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
 import { extractEmailsFromApplicationInputValues } from "@/utils/extract-emails";
-import generateApplicationTableCols from "@/utils/generate-application-table-cols";
-import { JobApplication, JobPost } from "@/utils/types";
+import generateApplicationTableCols, {
+  RenderTableCell,
+} from "@/utils/generate-application-table-cols";
+import { Application, JobApplication, JobPost } from "@/utils/types";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnFiltersState,
@@ -32,8 +34,16 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Mail } from "lucide-react";
+import { Calendar, Mail, Pen } from "lucide-react";
 import * as React from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function ApplicantsTable(props: {
   data: JobApplication["input_values"];
@@ -46,8 +56,6 @@ export function ApplicantsTable(props: {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  console.log(props.data);
 
   const table = useReactTable({
     data: props.data,
@@ -166,19 +174,59 @@ export function ApplicantsTable(props: {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <Sheet key={row.id}>
+                  <SheetTrigger asChild>
+                    <TableRow
+                      className="cursor-pointer"
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </SheetTrigger>
+                  <SheetContent className="space-y-5">
+                    <SheetHeader>
+                      <SheetTitle className="text-black">
+                        View application
+                      </SheetTitle>
+                    </SheetHeader>
+                    <div className="space-y-7">
+                      {Object.entries(row.original).map(([key, value]) => {
+                        const inputFields = props.schema.find(
+                          (a) => a.id === key,
+                        );
+                        if (!inputFields) return;
+                        return (
+                          <div className="space-y-2" key={String(value)}>
+                            <p className="text-sm text-black whitespace-nowrap capitalize">
+                              {key.replaceAll("_", " ")}
+                            </p>
+                            <RenderTableCell
+                              value={String(value)}
+                              field={inputFields}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <SheetFooter>
+                      <Button variant="secondary" className="w-full">
+                        <Calendar size={15} />
+                        Schedule meeting
+                      </Button>
+                      <Button className="w-full" disabled>
+                        <Pen size={15} />
+                        Add a note
+                      </Button>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
               ))
             ) : (
               <TableRow>

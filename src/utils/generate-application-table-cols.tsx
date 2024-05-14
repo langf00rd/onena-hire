@@ -19,7 +19,11 @@ export default function generateApplicationTableHeadCols(
       header: field.label,
       cell: (cell) => {
         return (
-          <RenderTableCell value={String(cell.getValue())} field={field} />
+          <RenderTableCell
+            value={String(cell.getValue())}
+            field={field}
+            truncateStrings
+          />
         );
       },
     });
@@ -27,9 +31,10 @@ export default function generateApplicationTableHeadCols(
   return columnDefs;
 }
 
-function RenderTableCell(props: {
+export function RenderTableCell(props: {
   value: string;
   field: InputFieldComponentProps;
+  truncateStrings?: boolean;
 }) {
   if (props.field.type === "file") {
     return (
@@ -61,10 +66,12 @@ function RenderTableCell(props: {
     );
   } else
     return (
-      <p className="max-w-xl line-clamp-1">
+      <p className={props.truncateStrings ? `max-w-xl line-clamp-1` : ""}>
         {props.field.type === "number"
           ? Number(props.value).toLocaleString()
-          : props.value}
+          : props.value === "undefined"
+            ? "--"
+            : props.value}
       </p>
     );
 }
