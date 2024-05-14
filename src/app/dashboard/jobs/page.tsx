@@ -62,7 +62,7 @@ export default function Page() {
       <PageInfo
         title="Your job postings"
         actionButtons={
-          parsedUserCookie.subscription_type !== "PAID" ? (
+          parsedUserCookie.subscription_type === "FREE" ? (
             <div className="flex items-center gap-3">
               <p>You have {remainingJobPostCredits} job post credits left</p>
               <Button disabled={remainingJobPostCredits <= 0}>
