@@ -65,7 +65,7 @@ export default function Page() {
           parsedUserCookie.subscription_type !== "PAID" ? (
             <div className="flex items-center gap-3">
               <p>You have {remainingJobPostCredits} job post credits left</p>
-              <Button disabled={remainingJobPostCredits === 0}>
+              <Button disabled={remainingJobPostCredits <= 0}>
                 <Link href={ROUTES.jobs.new}>Create new job </Link>
               </Button>
             </div>
