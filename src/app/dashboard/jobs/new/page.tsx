@@ -71,7 +71,7 @@ export default function Page() {
         });
       }
 
-      if (FREE_JOB_POST_CREDITS - (job_posts ?? []).length === 0) {
+      if (FREE_JOB_POST_CREDITS - (job_posts ?? []).length <= 0) {
         return toast({
           description:
             "You have exhaused all your free credits. Upgrade to pro to post more jobs",
