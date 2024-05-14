@@ -1,9 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { ROUTES } from "@/utils/constants";
+import { FREE_JOB_POST_CREDITS, ROUTES } from "@/utils/constants";
 import { DBUser, JobPost } from "@/utils/types";
 import { Loader } from "lucide-react";
 import Link from "next/link";
@@ -14,18 +13,16 @@ import cookie from "js-cookie";
 import JobPostCard from "@/components/job-post-card";
 
 export default function Page() {
+  const userCookie = cookie.get("db_user");
+  const parsedUserCookie: DBUser = JSON.parse(userCookie ?? "{}");
   const [jobPosts, setJobPosts] = useState<JobPost[] | null>(null);
 
   async function fetchJobPosts() {
-    const userCookie = cookie.get("db_user");
-
     if (!userCookie) {
       return toast({
         description: "please login again",
       });
     }
-
-    const parsedUserCookie: DBUser = JSON.parse(userCookie);
 
     const supabase = createClient();
 
@@ -57,16 +54,26 @@ export default function Page() {
     fetchJobPosts();
   }, []);
 
-  console.log(jobPosts);
+  const remainingJobPostCredits =
+    FREE_JOB_POST_CREDITS - (jobPosts ?? []).length;
 
   return (
     <div className="space-y-5">
       <PageInfo
         title="Your job postings"
         actionButtons={
-          <Link href={ROUTES.jobs.new}>
-            <Button>Create new job</Button>
-          </Link>
+          parsedUserCookie.subscription_type !== "PAID" ? (
+            <div className="flex items-center gap-3">
+              <p>You have {remainingJobPostCredits} job post credits left</p>
+              <Button disabled={remainingJobPostCredits === 0}>
+                <Link href={ROUTES.jobs.new}>Create new job </Link>
+              </Button>
+            </div>
+          ) : (
+            <Button>
+              <Link href={ROUTES.jobs.new}>Create new job </Link>
+            </Button>
+          )
         }
       />
       {!jobPosts ? (

@@ -17,17 +17,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { JOB_POST_SECTIONS } from "@/utils/constants";
-import { ApplicationJobPost, InputFieldComponentProps } from "@/utils/types";
-import { ArrowLeft, Copy, FileDown, Stars } from "lucide-react";
+import {
+  FREE_JOB_POST_CREDITS,
+  JOB_POST_SECTIONS,
+  ROUTES,
+} from "@/utils/constants";
+import {
+  ApplicationJobPost,
+  DBUser,
+  InputFieldComponentProps,
+} from "@/utils/types";
+import {
+  AlignHorizontalJustifyCenter,
+  ArrowLeft,
+  Copy,
+  FileDown,
+  Stars,
+} from "lucide-react";
 import { useState } from "react";
 import PageInfo from "../../components/page-info";
 import ApplicationFormBuilder from "./components/application-form-builder";
 import JobPostForm from "./components/job-post-form";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "@/components/ui/use-toast";
+import cookie from "js-cookie";
+import { ToastAction } from "@/components/ui/toast";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+  const supabase = createClient();
+  const userCookie = cookie.get("db_user");
+  const parsedUserCookie: DBUser = JSON.parse(userCookie ?? "{}");
   const [showJobPostForm, setShowJobPostForm] = useState(false);
   const [formData, setFormData] = useState<null | ApplicationJobPost>(null);
 
@@ -37,18 +59,42 @@ export default function Page() {
   }
 
   async function handleCreateJobPost(inputFields: InputFieldComponentProps[]) {
-    const supabase = createClient();
+    if (parsedUserCookie.subscription_type === "FREE") {
+      let { data: job_posts, error } = await supabase
+        .from("job_posts")
+        .select()
+        .eq("poster", parsedUserCookie.id);
+
+      if (error) {
+        return toast({
+          description: error.message,
+        });
+      }
+
+      if (FREE_JOB_POST_CREDITS - (job_posts ?? []).length === 0) {
+        return toast({
+          description:
+            "You have exhaused all your free credits. Upgrade to pro to post more jobs",
+          action: (
+            <ToastAction altText="Upgrade plan">
+              <Link href={ROUTES.upgrade}>Upgrade plan</Link>
+            </ToastAction>
+          ),
+        });
+      }
+    }
+
     const queryPayload = { ...formData, input_fields: inputFields };
 
     console.log("creating ", formData);
 
     const { error } = await supabase.from("job_posts").insert([queryPayload]);
 
-    if (error) {
-      return toast({ description: error.message });
-    }
+    if (error) return toast({ description: error.message });
 
     toast({ description: "job post created!" });
+
+    router.push(ROUTES.jobs.index);
   }
 
   return (

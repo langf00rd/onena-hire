@@ -60,6 +60,7 @@ export interface DBUser {
   first_name: string;
   last_name: string;
   organization: number;
+  subscription_type: "FREE" | "PAID";
 }
 
 // export interface JobPost {

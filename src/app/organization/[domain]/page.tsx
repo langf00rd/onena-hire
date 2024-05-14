@@ -36,7 +36,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <>
-      <div className="max-w-[500px] p-5 mx-auto space-y-10">
+      <div className="max-w-[500px] p-5 mx-auto space-y-5">
         {organization && organization[0] && (
           <h1 className="text-2xl md:text-3xl font-bold">
             {organization[0].name}
@@ -56,7 +56,7 @@ export default async function Page(props: PageProps) {
           </>
         )}
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mb-32">
         <Link href={ROUTES.index}>
           <Button variant="outline">Built with Onena Hire</Button>
         </Link>
