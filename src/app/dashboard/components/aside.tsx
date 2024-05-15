@@ -1,22 +1,14 @@
-import {
-  Bolt,
-  BriefcaseBusiness,
-  Shield,
-  ShieldHalf,
-  Stars,
-  TrendingUp,
-} from "lucide-react";
-import AsideNavItem from "./aside-nav-item";
-import { ReactNode } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CookieKeys, ROUTES } from "@/utils/constants";
+import { DBUser } from "@/utils/types";
+import { Bolt, BriefcaseBusiness, Stars } from "lucide-react";
+import { cookies } from "next/headers";
+import Link from "next/link";
+import { ReactNode } from "react";
+import AsideNavItem from "./aside-nav-item";
 import Support from "./support";
 import UserProfile from "./user-profile";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import cookie from "js-cookie";
-import { DBUser } from "@/utils/types";
-import { cookies } from "next/headers";
-import { Badge } from "@/components/ui/badge";
 
 export default function Aside() {
   const userCookie = cookies().get(CookieKeys.User);
@@ -50,7 +42,7 @@ export default function Aside() {
               className="bg-primary text-primary-foreground"
               variant="outline"
             >
-              Pro user
+              Pro plan
             </Badge>
           )}
           <UserProfile />

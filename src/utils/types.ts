@@ -1,3 +1,5 @@
+import { FileFieldTypes } from "./constants";
+
 export interface Application {
   [key: string]: unknown;
   id: string;
@@ -89,4 +91,13 @@ export interface Organization {
   name: string;
   website?: string;
   domain: string;
+}
+
+export interface RenderTableCellProps {
+  value: string;
+  field: InputFieldComponentProps;
+  truncateStrings?: boolean;
+  fileFieldType?: FileFieldTypes;
+  imageSize?: number;
+  showVideoInTableCell?: boolean;
 }
