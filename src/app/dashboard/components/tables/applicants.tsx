@@ -9,6 +9,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   Table,
   TableBody,
   TableCell,
@@ -17,14 +25,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
+import { FileFieldTypes } from "@/utils/constants";
 import { extractEmailsFromApplicationInputValues } from "@/utils/extract-emails";
 import generateApplicationTableCols, {
   RenderTableCell,
 } from "@/utils/generate-application-table-cols";
-import { Application, JobApplication, JobPost } from "@/utils/types";
+import {
+  Application,
+  InputFieldComponentProps,
+  JobApplication,
+  JobPost,
+} from "@/utils/types";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnFiltersState,
+  Row,
   SortingState,
   VisibilityState,
   flexRender,
@@ -36,14 +51,6 @@ import {
 } from "@tanstack/react-table";
 import { Calendar, Mail, Pen } from "lucide-react";
 import * as React from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 export function ApplicantsTable(props: {
   data: JobApplication["input_values"];
@@ -56,6 +63,8 @@ export function ApplicantsTable(props: {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const emails = extractEmailsFromApplicationInputValues(props.data);
+  const [isExportingEmails, startEmailExport] = React.useTransition();
 
   const table = useReactTable({
     data: props.data,
@@ -75,10 +84,6 @@ export function ApplicantsTable(props: {
       rowSelection,
     },
   });
-
-  const emails = extractEmailsFromApplicationInputValues(props.data);
-
-  const [isExportingEmails, startEmailExport] = React.useTransition();
 
   function exportStringsAsTxt(strings: string[], filename: string) {
     startEmailExport(() => {
@@ -173,61 +178,11 @@ export function ApplicantsTable(props: {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <Sheet key={row.id}>
-                  <SheetTrigger asChild>
-                    <TableRow
-                      className="cursor-pointer"
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </SheetTrigger>
-                  <SheetContent className="space-y-5">
-                    <SheetHeader>
-                      <SheetTitle className="text-black">
-                        View application
-                      </SheetTitle>
-                    </SheetHeader>
-                    <div className="space-y-7">
-                      {Object.entries(row.original).map(([key, value]) => {
-                        const inputFields = props.schema.find(
-                          (a) => a.id === key,
-                        );
-                        if (!inputFields) return;
-                        return (
-                          <div className="space-y-2" key={String(value)}>
-                            <p className="text-sm text-black whitespace-nowrap capitalize">
-                              {key.replaceAll("_", " ")}
-                            </p>
-                            <RenderTableCell
-                              value={String(value)}
-                              field={inputFields}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <SheetFooter>
-                      <Button variant="secondary" className="w-full">
-                        <Calendar size={15} />
-                        Schedule meeting
-                      </Button>
-                      <Button className="w-full" disabled>
-                        <Pen size={15} />
-                        Add a note
-                      </Button>
-                    </SheetFooter>
-                  </SheetContent>
-                </Sheet>
-              ))
+              table
+                .getRowModel()
+                .rows.map((row) => (
+                  <CTableCell schema={props.schema} key={row.id} row={row} />
+                ))
             ) : (
               <TableRow>
                 <TableCell
@@ -266,5 +221,62 @@ export function ApplicantsTable(props: {
         </div>
       </div>
     </div>
+  );
+}
+
+function CTableCell(props: {
+  schema: InputFieldComponentProps[];
+  row: Row<Record<string, unknown>>;
+}) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <TableRow
+          className="cursor-pointer"
+          data-state={props.row.getIsSelected() && "selected"}
+        >
+          {props.row.getVisibleCells().map((cell) => (
+            <TableCell key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          ))}
+        </TableRow>
+      </SheetTrigger>
+      <SheetContent className="space-y-5">
+        <SheetHeader>
+          <SheetTitle className="text-black">View application</SheetTitle>
+        </SheetHeader>
+        <div className="space-y-7">
+          {Object.entries(props.row.original).map(([key, value]) => {
+            const inputFields = props.schema.find((a) => a.id === key);
+            if (!inputFields) return;
+            return (
+              <div key={String(value)} className="space-y-1">
+                <p className="text-sm text-black whitespace-nowrap capitalize">
+                  {key.replaceAll("_", " ")}
+                </p>
+                <RenderTableCell
+                  fileFieldType={inputFields.file_field_type as FileFieldTypes}
+                  imageSize={150}
+                  showVideoInTableCell
+                  value={String(value)}
+                  field={inputFields}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <SheetFooter>
+          <Button disabled className="w-full">
+            <Calendar size={15} />
+            Schedule meeting
+          </Button>
+          <Button variant="outline" className="w-full" disabled>
+            <Pen size={15} />
+            Add a note
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
