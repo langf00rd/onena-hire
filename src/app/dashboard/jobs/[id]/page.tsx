@@ -103,12 +103,12 @@ export default async function Page(props: PageProps) {
           </div>
         }
       />
-      <Tabs defaultValue="account" className="mt-5">
+      <Tabs defaultValue="applicatins" className="mt-5">
         <TabsList>
-          <TabsTrigger value="account">Applications</TabsTrigger>
-          <TabsTrigger value="password">Settings</TabsTrigger>
+          <TabsTrigger value="applicatins">Applications</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="applicatins">
           <RenderOnClient>
             <ApplicantsTable
               schema={jobPostData.input_fields}
@@ -118,7 +118,7 @@ export default async function Page(props: PageProps) {
             />
           </RenderOnClient>
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="settings">
           <div className="mt-5">
             <div className="bg-destructive/10 flex items-center justify-between p-5 rounded-lg">
               <div>

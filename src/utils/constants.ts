@@ -44,6 +44,20 @@ export const INPUT_FIELD_TYPES = [
   // "multi-select",
 ];
 
+export enum FileFieldTypes {
+  VideoMP4 = "video/mp4",
+  ImagePNG = "image/png",
+  ImageJPG = "image/jpg",
+  ApplicationPDF = "image/PDF",
+}
+
+export const IMAGE_FILE_TYPES = [
+  FileFieldTypes.ImageJPG,
+  FileFieldTypes.ImagePNG,
+];
+
+export const VIDEO_FILE_TYPES = [FileFieldTypes.VideoMP4];
+
 export const FILE_TYPES = [
   { label: "PDF", value: "application/pdf" },
   {
