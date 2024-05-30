@@ -28,6 +28,7 @@ import { toast } from "@/components/ui/use-toast";
 import { FileFieldTypes } from "@/utils/constants";
 import { extractEmailsFromApplicationInputValues } from "@/utils/extract-emails";
 import generateApplicationTableCols, {
+  ApplicantsTableSheet,
   RenderTableCell,
 } from "@/utils/generate-application-table-cols";
 import {
@@ -49,7 +50,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Calendar, Mail, Pen } from "lucide-react";
+import { Calendar, Expand, Mail, Pen } from "lucide-react";
 import * as React from "react";
 
 export function ApplicantsTable(props: {
@@ -178,11 +179,30 @@ export function ApplicantsTable(props: {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table
-                .getRowModel()
-                .rows.map((row) => (
-                  <CTableCell schema={props.schema} key={row.id} row={row} />
-                ))
+              table.getRowModel().rows.map((row) => (
+                // <CTableCell
+                //   isInTable={true}
+                //   schema={props.schema}
+                //   key={row.id}
+                //   row={row}
+                // />
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer group relative"
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <>
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    </>
+                  ))}
+                </TableRow>
+              ))
             ) : (
               <TableRow>
                 <TableCell
@@ -227,7 +247,30 @@ export function ApplicantsTable(props: {
 function CTableCell(props: {
   schema: InputFieldComponentProps[];
   row: Row<Record<string, unknown>>;
+  isInTable: boolean;
 }) {
+  // return (
+  //   <div className="space-y-7">
+  //     {Object.entries(props.row.original).map(([key, value]) => {
+  //       const inputFields = props.schema.find((a) => a.id === key);
+  //       if (!inputFields) return;
+  //       return (
+  //         <div key={String(value)} className="space-y-1">
+  //           <p className="text-sm text-black whitespace-nowrap capitalize">
+  //             {key.replaceAll("_", " ")}
+  //           </p>
+  //           <RenderTableCell
+  //             fileFieldType={inputFields.file_field_type as FileFieldTypes}
+  //             imageSize={150}
+  //             showVideoInTableCell
+  //             value={String(value)}
+  //             field={inputFields}
+  //           />
+  //         </div>
+  //       );
+  //     })}
+  //   </div>
+  // );
   return (
     <Sheet>
       <SheetTrigger asChild>

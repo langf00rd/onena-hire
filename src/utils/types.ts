@@ -100,4 +100,5 @@ export interface RenderTableCellProps {
   fileFieldType?: FileFieldTypes;
   imageSize?: number;
   showVideoInTableCell?: boolean;
+  disabled?: boolean;
 }
