@@ -1,7 +1,7 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { JobPost, RenderTableCellProps } from "./types";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { Calendar, Expand, ExternalLink, Pen } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   FileFieldTypes,
@@ -9,6 +9,15 @@ import {
   VIDEO_FILE_TYPES,
 } from "./constants";
 import Image from "next/image";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 /**
  * dynamically generates the table heads (columns) for the table
@@ -25,12 +34,15 @@ export default function generateApplicationTableHeadCols(
       header: field.label,
       cell: (cell) => {
         return (
-          <RenderTableCell
-            value={String(cell.getValue())}
-            field={field}
-            truncateStrings
-            fileFieldType={field.file_field_type as FileFieldTypes}
-          />
+          <>
+            <ApplicantsTableSheet row={cell.row} schema={schema} />
+            <RenderTableCell
+              value={String(cell.getValue())}
+              field={field}
+              truncateStrings
+              fileFieldType={field.file_field_type as FileFieldTypes}
+            />
+          </>
         );
       },
     });
@@ -64,7 +76,10 @@ export function RenderTableCell(props: RenderTableCellProps) {
 
     return (
       <Dialog>
-        <DialogTrigger className="flex items-center gap-1 underline hover:no-underline whitespace-nowrap text-blue">
+        <DialogTrigger
+          disabled={props.disabled}
+          className="flex items-center gap-1 underline hover:no-underline whitespace-nowrap text-blue"
+        >
           <ExternalLink size={13} />
           <p>View file</p>
         </DialogTrigger>
@@ -91,7 +106,7 @@ export function RenderTableCell(props: RenderTableCellProps) {
     );
   } else
     return (
-      <p className={props.truncateStrings ? `max-w-xl line-clamp-1` : ""}>
+      <p className={props.truncateStrings ? `w-max max-w-xl line-clamp-1` : ""}>
         {props.field.type === "number"
           ? Number(props.value).toLocaleString()
           : props.value === "undefined"
@@ -99,4 +114,55 @@ export function RenderTableCell(props: RenderTableCellProps) {
             : props.value}
       </p>
     );
+}
+
+export function ApplicantsTableSheet(props: {
+  row: Row<Record<string, unknown>>;
+  schema: JobPost["input_fields"];
+}) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Expand
+          className="absolute rounded-md top-[33%] z-20 left-5 bg-white p-1 shadow-sm hidden group-hover:block"
+          size={25}
+        />
+      </SheetTrigger>
+      <SheetContent className="mx-2 mt-2 h-[98%] rounded-xl space-y-5">
+        <SheetHeader>
+          <SheetTitle className="text-black">View application</SheetTitle>
+        </SheetHeader>
+        <div className="space-y-7">
+          {Object.entries(props.row.original).map(([key, value]) => {
+            const inputFields = props.schema.find((a) => a.id === key);
+            if (!inputFields) return;
+            return (
+              <div key={String(value)} className="space-y-1">
+                <p className="text-sm text-black whitespace-nowrap capitalize">
+                  {key.replaceAll("_", " ")}
+                </p>
+                <RenderTableCell
+                  fileFieldType={inputFields.file_field_type as FileFieldTypes}
+                  imageSize={150}
+                  showVideoInTableCell
+                  value={String(value)}
+                  field={inputFields}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <SheetFooter>
+          <Button disabled className="w-full">
+            <Calendar size={15} />
+            Schedule meeting
+          </Button>
+          <Button variant="outline" className="w-full" disabled>
+            <Pen size={15} />
+            Add a note
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
 }
