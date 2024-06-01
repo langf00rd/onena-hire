@@ -128,7 +128,7 @@ export function ApplicantsTableSheet(props: {
           size={25}
         />
       </SheetTrigger>
-      <SheetContent className="mx-2 mt-2 h-[98%] rounded-xl space-y-5">
+      <SheetContent className="mx-2 mt-2 h-[98%] rounded-xl space-y-5 overflow-y-scroll">
         <SheetHeader>
           <SheetTitle className="text-black">View application</SheetTitle>
         </SheetHeader>

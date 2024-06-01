@@ -83,3 +83,18 @@ export enum CookieKeys {
 
 export const FREE_JOB_POST_CREDITS = 3;
 export const MAX_FREE_APPLICATION_RECORDS = 5000;
+
+export const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
