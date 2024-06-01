@@ -16,6 +16,11 @@ export interface Application {
   };
 }
 
+export interface FormattedApplication {
+  count: number;
+  month: string;
+}
+
 export interface JobApplication {
   id: number;
   created_at: string;
@@ -24,8 +29,6 @@ export interface JobApplication {
 }
 
 export interface PageProps {
-  // params: Record<string, unknown>;
-  // searchParams: Record<string, unknown>;
   params: Record<string, unknown>;
   searchParams: { [key: string]: string | string[] | undefined };
 }

@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CookieKeys, ROUTES } from "@/utils/constants";
 import { DBUser } from "@/utils/types";
-import { Bolt, BriefcaseBusiness, Stars } from "lucide-react";
+import { Bolt, BriefcaseBusiness, Stars, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -58,11 +58,11 @@ export const ASIDE_ROUTES: {
   route: string;
   icon?: ReactNode;
 }[] = [
-  // {
-  //   label: "Overview",
-  //   route: ROUTES.overview,
-  //   icon: <TrendingUp size={20} />,
-  // },
+  {
+    label: "Overview",
+    route: ROUTES.overview,
+    icon: <TrendingUp size={20} />,
+  },
   {
     label: "Jobs",
     route: ROUTES.jobs.index,

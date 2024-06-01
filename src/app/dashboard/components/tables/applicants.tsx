@@ -28,11 +28,9 @@ import { toast } from "@/components/ui/use-toast";
 import { FileFieldTypes } from "@/utils/constants";
 import { extractEmailsFromApplicationInputValues } from "@/utils/extract-emails";
 import generateApplicationTableCols, {
-  ApplicantsTableSheet,
   RenderTableCell,
 } from "@/utils/generate-application-table-cols";
 import {
-  Application,
   InputFieldComponentProps,
   JobApplication,
   JobPost,
@@ -50,7 +48,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Calendar, Expand, Mail, Pen } from "lucide-react";
+import { Calendar, Mail, Pen } from "lucide-react";
 import * as React from "react";
 
 export function ApplicantsTable(props: {
@@ -180,12 +178,6 @@ export function ApplicantsTable(props: {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                // <CTableCell
-                //   isInTable={true}
-                //   schema={props.schema}
-                //   key={row.id}
-                //   row={row}
-                // />
                 <TableRow
                   key={row.id}
                   className="cursor-pointer group relative"
